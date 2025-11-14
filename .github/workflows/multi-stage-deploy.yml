@@ -54,7 +54,6 @@ jobs:
         with:
           approvers: iTzHuGo
           minimum-approvals: 1
-          timeout-minutes: 1440  # 24 hours
 
       - name: Deploy to Production
         run: |
