@@ -49,12 +49,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
-      - name: Manual Approval Required
-        uses: trstringer/manual-approval@v1
-        with:
-          approvers: iTzHuGo
-          minimum-approvals: 1
-
       - name: Deploy to Production
         run: |
           echo "Deploying to Production..."
