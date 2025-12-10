@@ -56,25 +56,23 @@ CREATE TABLE IF NOT EXISTS list_movies (
 );
 
 
--- AUTOMATION (TRIGGERS)
+-- TRIGGERS:
 -- Function to create default lists automatically
 CREATE OR REPLACE FUNCTION create_default_user_lists()
 RETURNS TRIGGER AS $$
 BEGIN
-    -- Cria lista 'Favorites'
     INSERT INTO lists (user_id, name) VALUES (NEW.id, 'Favorites');
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
--- Trigger: Runs every time a new user is inserted
 CREATE TRIGGER trigger_new_user_setup
 AFTER INSERT ON users
 FOR EACH ROW
 EXECUTE FUNCTION create_default_user_lists();
 
--- ==========================================
--- ADD DATA
+
+-- ADD DATA:
 
 -- 1. Insert Movies
 INSERT INTO movies (tmdb_id, title, release_date, duration_min, synopsis, genre) VALUES 
@@ -91,6 +89,5 @@ INSERT INTO users (username, email, password_hash, role) VALUES
 INSERT INTO ratings (user_id, movie_id, rating_value, comment) VALUES
 (1, 1, 5, 'Mind-blowing movie!');
 
--- 4. Insert into Lists (Demonstration)
--- Alice (User 1) puts Inception (Movie 1) in her Favorites (List 1 - created by trigger)
+-- 4. Insert into Lists
 INSERT INTO list_movies (list_id, movie_id) VALUES (1, 1);
