@@ -1,0 +1,49 @@
+name: ase-project
+
+services:
+  db:
+    container_name: movie-db
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'",
+        ]
+      interval: 5s
+      timeout: 10s
+      retries: 6
+    volumes:
+      - db:/var/lib/postgresql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  api:
+    container_name: movie-api
+    build:
+      dockerfile: Dockerfile
+      context: ./
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - 3001:3000
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://api:$PORT/api/healthy" ]
+      interval: 5s
+      timeout: 10s
+      retries: 6
+    volumes:
+      - ./api:/app
+      - /app/node_modules
+      - uploads:/app/uploads
+
+volumes:
+  db:
+  uploads:
