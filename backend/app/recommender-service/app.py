@@ -3,6 +3,23 @@ from flask import Flask, request, jsonify
 import recommender
 import pandas as pd
 import requests
+
+# TODO por isto a dar com o docker
+# TODO ligar a BD
+# TODO conectar isto à express API
+# TODO ver que output a base de dados dá para os users e filmes
+# TODO ver que APIs me ligam à API da TMDB e como me devolvem todos os filmes
+# TODO verificar o primeiro recommend based on movie
+# TODO terminar e verificar o reccomend based on user
+# TODO
+# TODO
+# TODO
+# TODO
+# TODO
+# TODO
+# TODO
+# TODO
+
 # Import your trained model or recommendation functions here
 EXPRESS_URL = 'http://localhost:5000'
 EXPRESS_MOVIES_ENDPOINT = f"{EXPRESS_URL}/api/movies/all"
