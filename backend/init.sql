@@ -83,7 +83,9 @@ INSERT INTO movies (tmdb_id, title, release_date, duration_min, synopsis, genre)
 -- 2. Insert Users 
 INSERT INTO users (username, email, password_hash, role) VALUES 
 ('Alice', 'alice@gmail.com', 'hashed_secret', 'user'),
+('admin', 'admin@gmail.com', 'tacobell', 'admin'),
 ('Bob', 'bob@gmail.com', 'hashed_secret', 'user');
+
 
 -- 3. Insert Rating
 INSERT INTO ratings (user_id, movie_id, rating_value, comment) VALUES

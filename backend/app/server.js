@@ -1,3 +1,5 @@
+// app/server.js
+
 const express = require('express');
 const cors = require('cors');
 const db = require('./config/db.config');
@@ -16,7 +18,7 @@ app.get('/', (req, res) => {
 });
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
     try {
         const result = db.query('SELECT NOW()');
         res.json({ status: 'BACKEND is healthy', db_time: result.rows[0].now });

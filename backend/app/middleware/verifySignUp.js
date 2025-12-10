@@ -1,4 +1,6 @@
-const db = require("../config/db.config");
+// app/middleware/verifySignUp.js
+
+import { query } from "../config/db.config";
 
 const ROLES = ["user", "admin"];
 
@@ -7,8 +9,8 @@ const checkDuplicateUsernameOrEmail = async (req, res, next) => {
     const email = req.body.email;
 
     try {
-        const userByUsername = await db.query("SELECT id FROM users WHERE username = $1", [username]);
-        const userByEmail = await db.query("SELECT id FROM users WHERE email = $1", [email]);
+        const userByUsername = await query("SELECT id FROM users WHERE username = $1", [username]);
+        const userByEmail = await query("SELECT id FROM users WHERE email = $1", [email]);
         if (userByUsername.rows.length > 0 || userByEmail.rows.length > 0) {
             return res.status(400).json({ message: "Failed! Username or Email is already in use!" });
         }
@@ -35,4 +37,4 @@ const verifySignUp = {
     checkRolesExisted
 };
 
-module.exports = verifySignUp;
+export default verifySignUp;

@@ -1,5 +1,5 @@
+// app/config/auth.config.js
+
 require('dotenv').config();
 
-module.exports = {
-    secret: process.env.JWT_SECRET,
-};
+export const secret = process.env.JWT_SECRET;
