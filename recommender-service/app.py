@@ -9,12 +9,11 @@ EXPRESS_MOVIES_ENDPOINT = f"{EXPRESS_URL}/api/movies/all"
 EXPRESS_MOVIE_GENRES_ENDPOINT = f"{EXPRESS_URL}/api/movies/genre/list"
 
 
-movie_df = None
+global movie_df
 
 app = Flask(__name__)
 
 def load_movie_database():
-
     global movie_df
     
     print(f"Fetching all movies from Express: {EXPRESS_MOVIES_ENDPOINT}")
@@ -33,7 +32,7 @@ def load_movie_database():
         if not movie_list:
             print("WARNING: Express returned no movies. DataFrame will be empty.")
         
-        movie_df = pd.DataFrame(movie_list)
+        movie_df = pd.DataFrame(movie_data).set_index('id')
 
         print(f"Successfully loaded {len(movie_list)} movies into cache")
 
@@ -64,7 +63,10 @@ def load_movie_genres():
         print(f"FATAL ERROR: Could not connect to Express to load genres data. Check Express service.")
         raise SystemExit(e)
 
-def get_movie_based_recommendations(movie_id):
+def get_movie_based_recommendations(movie_title):
+    
+
+    recommender.similar_movies_recommendation(movie_title, movies_df)
 
     return []
 
