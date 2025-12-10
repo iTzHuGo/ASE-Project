@@ -1,5 +1,6 @@
 # recommender-service/app.py
 from flask import Flask, request, jsonify
+import recommender
 import pandas as pd
 import requests
 # Import your trained model or recommendation functions here
@@ -13,6 +14,8 @@ movie_df = None
 app = Flask(__name__)
 
 def load_movie_database():
+
+    global movie_df
     
     print(f"Fetching all movies from Express: {EXPRESS_MOVIES_ENDPOINT}")
 
@@ -60,14 +63,8 @@ def load_movie_genres():
     except requests.exceptions.RequestException as e:
         print(f"FATAL ERROR: Could not connect to Express to load genres data. Check Express service.")
         raise SystemExit(e)
-    
-
-
-
 
 def get_movie_based_recommendations(movie_id):
-
-    movies = movie_df
 
     return []
 
@@ -114,5 +111,6 @@ def recommend(user_id):
 
 if __name__ == '__main__':
     load_movie_database()
+    load_movie_genres()
 
     app.run(port=8000)
