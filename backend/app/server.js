@@ -11,6 +11,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get('/', (req, res) => {
+    res.json({ message: 'Welcome to the Movie App Backend!' });
+});
+
+// Health check endpoint
 app.get('/health', (req, res) => {
     try {
         const result = db.query('SELECT NOW()');
