@@ -1,6 +1,6 @@
 // app/config/db.config.js
 
-const { Pool }  = require('pg');
+import { Pool } from 'pg';
 require('dotenv').config();
 
 const pool = new Pool({
@@ -11,6 +11,4 @@ const pool = new Pool({
     port: 5432,
 });
 
-module.exports = {
-    query: (text, params) => pool.query(text, params),
-};
+export function query(text, params) { return pool.query(text, params); }
