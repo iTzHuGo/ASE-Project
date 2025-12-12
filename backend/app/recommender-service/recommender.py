@@ -73,36 +73,81 @@ def user_based_recommendation(userID, userMoviesReviews, top_n=5):
     :param top_n: Default = 5. Escolhe quantos filmes sugerir ao utilizador
     '''
 
-    # Criar um dataFrame dos userMoviesReviews
-
-    userMoviesReviews_df = pd.DataFrame(userMoviesReviews).set_index('id')
-
-    # Criar um average userMoviesReviews tendo em conta a media dos ratings
+    if not userMoviesReviews or len(userMoviesReviews) == 0:
+        print(f"User {userID} has no movie reviews")
+        return pd.DataFrame()
     
-    # Cria um dicionario com keys de genero ID adicionado +1 por cada filme que o tenha
-    average_movie_genre = dict()
+    # Criar um dicionário de genres 
+    genre_weighted_scores = {}
+    
     for movie in userMoviesReviews:
-        for genre in movie['genre_ids']:
-            average_movie_genre[genre] = average_movie_genre.get(genre,0) + 1
-
-    # TODO Decidir quanto vale o género tendo em conta que rating obteve
-
-    # Faz o average
-    for genre in average_movie_genre:
-        average_movie_genre[genre] = average_movie_genre.get(genre)/len(userMoviesReviews)
-
-
-    average_movie_genre_df = pd.DataFrame([average_movie_genre])
-    average_movie_genre_df.index([-1])
+        rating = movie.get('rating', 0)
+        genres = movie.get('genre_ids', [])
+        
+        for genre_id in genres:
+            if genre_id not in genre_weighted_scores:
+                genre_weighted_scores[genre_id] = 0
+            # Multiplicar cada género pelo rating do filme
+            genre_weighted_scores[genre_id] += rating
     
-    usermovies_matrix = pd.get_dummies(usermovies_matrix['genre_ids'].apply(pd.Series).stack()).groupby(level=0).sum().astype(int)
-    average_movie_matrix = pd.get_dummies
-    # Aplicar o pd.dummies a esse average
-    # Fazer o cosine similarity com o average user movie
-    # Devolver o top_n filmes em relacao ao 
-
-
-    return []
+    # Normalizar os scores (dividir pelo número de filmes que contêm cada género)
+    genre_count = {}
+    for movie in userMoviesReviews:
+        for genre_id in movie.get('genre_ids', []):
+            genre_count[genre_id] = genre_count.get(genre_id, 0) + 1
+    
+    for genre_id in genre_weighted_scores:
+        genre_weighted_scores[genre_id] = genre_weighted_scores[genre_id] / genre_count[genre_id]
+    
+    # Escolher os top 3 géneros
+    sorted_genres = sorted(genre_weighted_scores.items(), key=lambda x: x[1], reverse=True)
+    top_3_genres = [genre_id for genre_id, score in sorted_genres[:3]]
+    
+    print(f"User {userID} top 3 genres: {top_3_genres}")
+    print(f"Genre scores: {dict(sorted_genres[:3])}")
+    
+    # Criar matriz de géneros para todos os filmes
+    genre_matrix = pd.get_dummies(
+        movies_df['genre_ids'].apply(pd.Series).stack()
+    ).groupby(level=0).sum().astype(int)
+    
+    # Criar pseudo-filme com os top 3 géneros
+    # Inicializar com zeros para todos os géneros
+    pseudo_movie = pd.Series(0, index=genre_matrix.columns)
+    
+    # Marcar com 1 apenas os top 3 géneros
+    for genre_id in top_3_genres:
+        if genre_id in pseudo_movie.index:
+            pseudo_movie[genre_id] = 1
+    
+    # Fazer reshape para formato correto (1 linha)
+    pseudo_movie_matrix = pseudo_movie.values.reshape(1, -1)
+    
+    # Calcular cosine similarity entre pseudo-filme e todos os filmes
+    similarities = cosine_similarity(pseudo_movie_matrix, genre_matrix)[0]
+    
+    # Ordenar por similaridade
+    similarity_scores = list(enumerate(similarities))
+    similarity_scores = sorted(similarity_scores, key=lambda x: x[1], reverse=True)
+    
+    # Filtrar filmes que o user já avaliou
+    rated_movie_ids = [movie['id'] for movie in userMoviesReviews]
+    
+    # Obter top_n filmes (excluindo os já avaliados)
+    recommended_positions = []
+    for position, score in similarity_scores:
+        movie_id = movies_df.iloc[position].name  # name é o index (id)
+        if movie_id not in rated_movie_ids and score > 0:  # score > 0 garante alguma similaridade
+            recommended_positions.append(position)
+            if len(recommended_positions) >= top_n:
+                break
+    
+    # Retornar filmes recomendados
+    recommended_movies = movies_df.iloc[recommended_positions][['title', 'genre_ids']]
+    
+    print(f"\nRecommended {len(recommended_movies)} movies for user {userID}")
+    
+    return recommended_movies
 
 
 if __name__ == "__main__" :
