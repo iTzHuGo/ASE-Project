@@ -3,8 +3,8 @@
 const express = require('express');
 const cors = require('cors');
 const db = require('./config/db.config');
-import authRoutes from "./app/routes/auth.routes.js";
-import recommendationRoutes from "./app/routes/recommendation.routes.js";
+const authRoutes = require('./app/routes/auth.routes.js');
+const recommendationRoutes  = require('./app/routes/recommendation.routes.js');
 
 
 const app = express();
