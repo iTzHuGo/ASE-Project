@@ -81,42 +81,24 @@ def load_movie_genres():
         raise SystemExit(e)
 
 def get_user_movie_ratings(user_id):
-    express_endpoint = f"{EXPRESS_USER_RATINGS_ENDPOINT}/{user_id}"
+    express_endpoint = f"{EXPRESS_USER_RATINGS_ENDPOINT}/user/{user_id}"
     
-    print(f"Fetching user ratings from Express: {express_endpoint}")
+    
 
     try:
+        print(f"Fetching user ratings from Express: {express_endpoint}")
+
         response = requests.get(express_endpoint, timeout=5)
         response.raise_for_status()
+        
         user_data = response.json()
+        user_ratings = user_data.get('ratings', [])
         
-        # Assumindo que a Express API retorna algo como:
-        # {'user_id': 123, 'ratings': [{'movie_id': 1, 'rating': 4.5}, ...]}
-        user_ratings_list = user_data.get('ratings', [])
+        print(f"Received{len(user_ratings)} enriched ratings from Express."    
+        return user_ratings
         
-        if not user_ratings_list:
-            return []
-        
-        # Enriquecer os ratings com informação dos filmes
-        enriched_ratings = []
-        for rating_data in user_ratings_list:
-            movie_id = rating_data.get('movie_id')
-            rating_value = rating_data.get('rating')
-            
-            # Buscar informação do filme no movies_df
-            if movie_id in movie_df.index:
-                movie_info = movie_df.loc[movie_id]
-                enriched_ratings.append({
-                    'id': movie_id,
-                    'title': movie_info.get('title', 'Unknown'),
-                    'genre_ids': movie_info.get('genre_ids', []),
-                    'rating': rating_value
-                })
-        
-        return enriched_ratings
-        
-    except requests.exceptions.RequestException as e:
-        print(f"Error connecting to Express or received bad response: {e}")
+    except requests.RequestException as e:
+        print(f"Error fetching enriched user ratings: {e}")
         return []
 
 @app.route('/recommend/movie/<string:movie_title>', methods=['GET'])
@@ -151,29 +133,22 @@ def recommend_by_movie(movie_title):
         return jsonify({"error": str(e)}), 500
     
 @app.route('/recommend/user/<int:user_id>', methods=['GET'])
-def recommend_by_user(user_id, top_n=5):
+def recommend_by_user(user_id):
     """
     Endpoint para recomendar filmes baseado no histórico do utilizador
     """
+
+    top_n = request.args.get('top_n', 5 ,type=int)
+
     try:
         
         print(f"Fetching ratings for user {user_id} from Exepress: {EXPRESS_USER_RATINGS_ENDPOINT}")
         
-        response = requests.get(
-            f"{EXPRESS_USER_RATINGS_ENDPOINT}/user/{user_id}",
-            params={'top_n': top_n}
-        )
+        user_ratings = get_user_movie_ratings(user_id)
 
-        response.raise_for_status()
-
-        user_ratings_data = response.json()
-        
-        # 1. Buscar ratings do utilizador
-        user_ratings = user_ratings_data.get('ratings',[])
-        
         if not user_ratings:
             return jsonify({
-                "error": f"User {user_id} has no ratings or was not found"
+                "error" : f"User {user_id} has no ratings or was not found"
             }), 404
         
         # 2. Gerar recomendações
