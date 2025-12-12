@@ -1,16 +1,18 @@
 // app/server.js
 
-const express = require('express');
-const cors = require('cors');
-const db = require('./config/db.config.js');
-const authRoutes = require("./routes/auth.routes.js");
+import express, { json, urlencoded } from 'express';
+import cors from 'cors';
+import { query } from './config/db.config.js';
+import authRoutes from "./routes/auth.routes.js";
 
 
 const app = express();
 
+
+app.use(json());
+app.use(urlencoded({ extended: true }));
+
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
     res.json({ message: 'Welcome to the Movie App Backend!' });
@@ -19,7 +21,7 @@ app.get('/', (req, res) => {
 // Health check endpoint
 app.get('/api/health', (req, res) => {
     try {
-        const result = db.query('SELECT NOW()');
+        const result = query('SELECT NOW()');
         res.json({ status: 'BACKEND is healthy', db_time: result.rows[0].now });
     } catch (err) {
         console.error(err);

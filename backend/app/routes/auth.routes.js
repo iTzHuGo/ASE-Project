@@ -1,34 +1,32 @@
 // app/routes/auth.routes.js
 
 // 1. Mudar IMPORT para REQUIRE
-const express = require("express");
+import { Router } from "express";
 
-const controller = require("../controllers/auth.controller.js");
+import { signup, signin } from "../controllers/auth.controller.js";
+import { signup as _signup, signin as _signin } from "../controllers/auth.AI.controller.js";
+import { verifySignUp } from "../middlewares/index.js";
 
-const controllerAI = require("../controllers/auth.AI.controller.js");
-
-const { verifySignUp } = require("../middlewares");
-
-const router = express.Router();
+const router = Router();
  
 // Signup Route
 router.post(
     "/signup",
-    [verifySignUp.checkDuplicateUsernameOrEmail, verifySignUp.checkRolesExisted],
-    controller.signup,
+    [verifySignUp.checkDuplicateUsernameOrEmail, verifySignUp.checkPassowordStrength],
+    signup,
 );
- 
+
 // Signin Route
-router.post("/signin", controller.signin);
+router.post("/signin", signin);
 
 // Signup Route AI
 router.post(
     "/signup_ai",
-    [verifySignUp.checkDuplicateUsernameOrEmail, verifySignUp.checkRolesExisted],
-    controllerAI.signup,
+    [verifySignUp.checkDuplicateUsernameOrEmail, verifySignUp.checkPassowordStrength],
+    _signup,
 );
  
 // Signin Route AI
-router.post("/signin_ai", controllerAI.signin);
+router.post("/signin_ai", _signin);
 
-module.exports = router;
+export default router;
