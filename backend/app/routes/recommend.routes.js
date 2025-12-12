@@ -1,18 +1,21 @@
 // app/routes/auth.routes.js
 
 import express from "express";
-import { signup, signin } from "../controllers/auth.controller.js";
-import { verifySignUp } from "../middlewares/index.js";
+
+import {
+    recommendBasedOnMovie,
+    getRatedMoviesByUser
+} from "../controllers/recommendation.controller.js";
 
 
 const router = express.Router();
  
  
-// Signin Route
-router.get("/movies", );
-router.get("/user", );
-router.get("/search",);
+// Route for the flask service to fect users movies
 
+//full path : /api/recommend/user/:userId
+router.get("/user/:userId",getRatedMoviesByUser );
 
+router.post("/movie-recommendation", recommendBasedOnMovie);
  
 export default router;
