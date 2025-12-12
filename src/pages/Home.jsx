@@ -1,17 +1,30 @@
-import "./../app.css";
+import { useEffect, useState } from "react";
+import "../App.css"; // A linha mágica que liga o estilo
 import { Link } from "react-router-dom";
 
 export default function Home() {
+  const [trending, setTrending] = useState([]);
+
+  useEffect(() => {
+    const API_KEY = import.meta.env.VITE_TMDB_KEY;
+    fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=${API_KEY}`)
+      .then(r => r.json())
+      .then(data => setTrending(data.results.slice(0, 6))) // Pegamos apenas nos primeiros 6
+      .catch(err => console.error("Erro ao carregar trends:", err));
+  }, []);
+
   return (
     <div className="landing-page">
       <div className="landing-inner">
+        {/* Orbes Animados */}
         <div className="landing-orb landing-orb--gold" />
         <div className="landing-orb landing-orb--purple" />
 
+        {/* Lado Esquerdo: Texto */}
         <section className="landing-hero">
           <div className="landing-badge">
             <span className="landing-badge-dot" />
-            POPCORN GALAXY
+            POPCORN GALAXY v1.0
           </div>
 
           <h1 className="landing-title">
@@ -27,73 +40,46 @@ export default function Home() {
             <Link to="/login">
               <button className="landing-btn-primary">Entrar</button>
             </Link>
-
-            <Link to="/register">
-              <button className="landing-btn-ghost">
-                Criar conta
-              </button>
+            <Link to="/catalog" className="landing-btn-primary">
+              Ver Catálogo
             </Link>
+            <Link to="/catalogAI" className="landing-btn-ai">
+              Catálogo AI 
+            </Link>
+            
           </div>
 
           <div className="landing-meta">
-            <div className="landing-meta-item">
-              <strong>Watchlist infinita</strong>
-              Nunca mais perdes aquele filme que alguém recomendou.
+            <div>
+              <strong style={{color: '#e5e7eb', display: 'block'}}>Watchlist infinita</strong>
+              <span>Nunca perdes um filme.</span>
             </div>
-            <div className="landing-meta-item">
-              <strong>Mood-based picks</strong>
-              Liga o cérebro ou só come pipocas — tu decides.
+            <div>
+              <strong style={{color: '#e5e7eb', display: 'block'}}>Mood picks</strong>
+              <span>Sugestões baseadas no vibe.</span>
             </div>
           </div>
         </section>
 
+        {/* Lado Direito: Grid Visual */}
         <aside className="landing-panel">
-          <header className="landing-panel-header">
-            <div>
-              <div className="landing-panel-title">Trending hoje</div>
-              <div className="landing-panel-chip">🎬 Popcorn Galaxy Mix</div>
-            </div>
+          <header style={{display: 'flex', justifyContent: 'space-between', marginBottom: '1rem'}}>
+             <div style={{fontWeight: '600', color: '#fff'}}>Trending hoje</div>
+             <div style={{fontSize: '0.8rem', color: '#4ade80', background: 'rgba(74, 222, 128, 0.1)', padding: '2px 8px', borderRadius: '12px'}}>Live</div>
           </header>
 
           <div className="landing-mini-grid">
-            {/* Aqui podes depois mapear filmes reais; por enquanto é estático */}
-            <div className="landing-movie-card">
-              <div
-                className="landing-movie-poster"
-                style={{ backgroundImage: "url(https://images.pexels.com/photos/799152/pexels-photo-799152.jpeg?auto=compress&cs=tinysrgb&w=400)" }}
+            {trending.map((movie) => (
+              <div 
+                key={movie.id} 
+                className="landing-movie-card" 
+                style={{ backgroundImage: `url(https://image.tmdb.org/t/p/w500${movie.poster_path})` }}
+                title={movie.title}
               />
-              <div className="landing-movie-body">
-                <div className="landing-movie-title">Neon Nights</div>
-                <div className="landing-movie-meta">Sci-Fi • 2024</div>
-              </div>
-            </div>
-            <div className="landing-movie-card">
-              <div
-                className="landing-movie-poster"
-                style={{ backgroundImage: "url(https://images.pexels.com/photos/799127/pexels-photo-799127.jpeg?auto=compress&cs=tinysrgb&w=400)" }}
-              />
-              <div className="landing-movie-body">
-                <div className="landing-movie-title">Midnight Screen</div>
-                <div className="landing-movie-meta">Drama • 2022</div>
-              </div>
-            </div>
-            <div className="landing-movie-card">
-              <div
-                className="landing-movie-poster"
-                style={{ backgroundImage: "url(https://images.pexels.com/photos/799114/pexels-photo-799114.jpeg?auto=compress&cs=tinysrgb&w=400)" }}
-              />
-              <div className="landing-movie-body">
-                <div className="landing-movie-title">Popcorn Dreams</div>
-                <div className="landing-movie-meta">Comedy • 2023</div>
-              </div>
-            </div>
+            ))}
           </div>
         </aside>
 
-        <footer className="landing-footer">
-          Popcorn Galaxy · O teu cantinho privado para organizar maratonas,
-          guilty pleasures e clássicos esquecidos.
-        </footer>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "../styles/auth.css"; // idem, opcional se já tens tudo em app.css
+import { useNavigate, Link } from "react-router-dom";
+import "../App.css"; 
 import { register as registerRequest } from "../services/authAPi";
 
 export default function Register() {
@@ -17,7 +17,7 @@ export default function Register() {
 
   function handleChange(e) {
     const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   }
 
   async function handleSubmit(e) {
@@ -25,27 +25,21 @@ export default function Register() {
     setError("");
 
     if (form.password !== form.confirmPassword) {
-      setError("As palavras-passe não coincidem.");
+      setError("As passwords não coincidem.");
       return;
     }
 
     try {
       setLoading(true);
-
-      // 👉 Ligação ao backend (para já, ao placeholder em authApi.js)
       const data = await registerRequest({
         name: form.name,
         email: form.email,
         password: form.password,
       });
-
       console.log("Registo OK:", data);
-      // TODO: guardar token / user se quiseres login automático
-
-      // Por agora, depois de registar vai para login
       navigate("/login");
     } catch (err) {
-      setError(err.message || "Erro inesperado no registo.");
+      setError(err.message || "Erro no registo.");
     } finally {
       setLoading(false);
     }
@@ -53,38 +47,26 @@ export default function Register() {
 
   return (
     <div className="auth-page">
+      <div className="auth-orb orb-gold" />
+      <div className="auth-orb orb-purple" />
+
       <div className="auth-inner">
-        {/* Orbes */}
-        <div className="auth-orb auth-orb--amber" />
-        <div className="auth-orb auth-orb--indigo" />
-
-        {/* Lado esquerdo – texto / hero */}
-        <section className="auth-hero">
-          <div className="auth-kicker">POPCORN GALAXY</div>
-          <h1 className="auth-hero-title">
-            Cria a tua <span>constelação de filmes</span>.
-          </h1>
+        <div className="auth-hero">
+          <div className="auth-kicker">JUNTA-TE À GALÁXIA</div>
+          <h1 className="auth-hero-title">Cria a tua conta.</h1>
           <p className="auth-hero-subtitle">
-            Regista-te para começares a guardar tudo o que já viste,
-            o que tens na lista e o que não queres mesmo perder.
+            Começa a organizar os teus filmes favoritos e descobre novas pérolas do cinema.
           </p>
-        </section>
+        </div>
 
-        {/* Lado direito – card com o formulário */}
         <div className="auth-card">
-          <div className="auth-tag">Registo</div>
-          <h2 className="auth-title">Cria a tua conta</h2>
-          <p className="auth-subtitle">
-            Vai ser rápido: só precisamos do teu nome, email e uma password.
-          </p>
+          <h2 className="auth-title">Registar</h2>
+          <p className="auth-subtitle">É rápido e gratuito.</p>
 
           <form className="auth-form" onSubmit={handleSubmit}>
             <div className="auth-field">
-              <label className="auth-label" htmlFor="name">
-                Nome
-              </label>
+              <label className="auth-label">Nome</label>
               <input
-                id="name"
                 name="name"
                 type="text"
                 className="auth-input"
@@ -94,13 +76,10 @@ export default function Register() {
                 required
               />
             </div>
-
+            
             <div className="auth-field">
-              <label className="auth-label" htmlFor="email">
-                Email
-              </label>
+              <label className="auth-label">Email</label>
               <input
-                id="email"
                 name="email"
                 type="email"
                 className="auth-input"
@@ -112,11 +91,8 @@ export default function Register() {
             </div>
 
             <div className="auth-field">
-              <label className="auth-label" htmlFor="password">
-                Password
-              </label>
+              <label className="auth-label">Password</label>
               <input
-                id="password"
                 name="password"
                 type="password"
                 className="auth-input"
@@ -128,11 +104,8 @@ export default function Register() {
             </div>
 
             <div className="auth-field">
-              <label className="auth-label" htmlFor="confirmPassword">
-                Confirmar password
-              </label>
+              <label className="auth-label">Confirmar Password</label>
               <input
-                id="confirmPassword"
                 name="confirmPassword"
                 type="password"
                 className="auth-input"
@@ -146,12 +119,12 @@ export default function Register() {
             {error && <div className="auth-error">{error}</div>}
 
             <button type="submit" className="auth-btn" disabled={loading}>
-              {loading ? "A registar..." : "Criar conta"}
+              {loading ? "A criar conta..." : "Criar Conta"}
             </button>
           </form>
 
           <div className="auth-footer">
-            Já tens conta? <a href="/login">Faz login</a>
+            Já tens conta? <Link to="/login">Entrar</Link>
           </div>
         </div>
       </div>
