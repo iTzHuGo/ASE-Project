@@ -1,6 +1,11 @@
 // app/controllers/recommendation.controller.js
 
 import { query as _query } from "../config/db.config.js";
+import fetch from 'node-fetch';
+
+const TMDB_API_URL = 'https://api.themoviedb.org/3';
+const TMDB_API_KEY = process.env.TMDB_API_KEY;
+
 
 
 export const recommendBasedOnMovie = async (req, res) => {
@@ -44,22 +49,40 @@ export const getRatedMoviesByUser = async (req, res) => {
 
         // QUERY A DB PARA OBTER OS FILMES AVALIADOS PELO USER
         const sql = `
-            SELECT movie_id, rating
-            FROM user_ratings
-            WHERE user_id = $1
+            SELECT 
+                r.movie_id, 
+                r.rating_value, 
+                m.tmdb_id 
+            FROM ratings r
+            JOIN movies m ON r.movie_id = m.id
+            WHERE r.user_id = $1;
         `;
 
         const results = await _query(sql, [userId]);
+        const dbRatings = results.rows;
 
-        const ratingsForRecommender = results.rows.map(row => ({
-            id: row.movie_id,
-            rating: row.rating
-        }));
+        if (dbRatings.length === 0) {
+            return res.status(404).json({
+                message: `No ratings found for user ID ${userId}.`
+            });
+        }
+
+        const enrichmentPromises = dbRatings.map(async (rating) => {
+            const genreIds = await getTmdbMovieGenres(rating.tmdb_id);
+            return {
+                id: row.movie_id,
+                rating: row.rating_value,
+                tmdb_id: rating.tmdb_id,
+                genres: genreIds
+            };
+        });
+
+        const enrichedRatings = await Promise.all(enrichmentPromises);
 
         return res.status(200).json({
             user_id: userId,
-            ratings: ratingsForRecommender,
-            count: ratingsForRecommender.length
+            ratings: enrichedRatings.filter(r => r.genres.length > 0),
+            count: enrichedRatings.length
         });
         
     } catch (err) {
@@ -101,5 +124,28 @@ export const recommendForUser = async (req, res) => {
         console.error(err);
         res.status(500).json({ message: "Error fetching user recommendations!", error: err.message });
     }
-}   
 
+}
+    const getTmdbMovieGenres = async (tmdbMovieId) => {
+
+        const url = `${TMDB_API_URL}/movie/${tmdbMovieId}?api_key=${TMDB_API_KEY}`;
+
+        try {
+            const response  = await fetch(url);
+
+            if (!response.ok) {
+                console.error("TMDB Error for ID ${tmdbMovieId}:", response.statusText);
+                return [];
+            }
+
+            const data = await response.json();
+            return data.genres.map(genre => genre.name);
+        } catch (e) {
+            console.error(`Network or Parsing Error fetching ${tmdbMovieId}:`, e);
+            return [];
+        }
+    }
+    
+
+    export {recommendBasedOnMovie};
+    export {getRatedMoviesByUser};
