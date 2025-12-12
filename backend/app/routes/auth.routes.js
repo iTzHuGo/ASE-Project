@@ -1,9 +1,11 @@
 // app/routes/auth.routes.js
 
-import express from "express";
-import { signup, signin } from "../controllers/auth.controller.js";
-import { verifySignUp } from "../middlewares/index.js";
+// 1. Mudar IMPORT para REQUIRE
+const express = require("express");
 
+const controller = require("../controllers/auth.controller.js");
+
+const { verifySignUp } = require("../middlewares");
 
 const router = express.Router();
  
@@ -11,10 +13,10 @@ const router = express.Router();
 router.post(
     "/signup",
     [verifySignUp.checkDuplicateUsernameOrEmail, verifySignUp.checkRolesExisted],
-    signup,
+    controller.signup,
 );
  
 // Signin Route
-router.post("/signin", signin);
+router.post("/signin", controller.signin);
  
-export default router;
+module.exports = router;

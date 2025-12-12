@@ -2,4 +2,6 @@
 
 require('dotenv').config();
 
-export const secret = process.env.JWT_SECRET;
+module.exports = {
+    secret: process.env.JWT_SECRET
+};

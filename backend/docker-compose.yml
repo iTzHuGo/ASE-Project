@@ -3,7 +3,7 @@ name: ase-project
 services:
   db:
     container_name: movie-db
-    image: postgres:latest
+    image: postgres:16-alpine
     ports:
       - 5432:5432
     restart: unless-stopped
@@ -29,7 +29,6 @@ services:
     container_name: movie-api
     build:
       dockerfile: Dockerfile
-      context: ./app
     depends_on:
       db:
         condition: service_healthy
