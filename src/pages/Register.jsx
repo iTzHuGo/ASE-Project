@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../App.css"; 
-import { register as registerRequest } from "../services/authAPi";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -31,14 +30,37 @@ export default function Register() {
 
     try {
       setLoading(true);
-      const data = await registerRequest({
-        name: form.name,
-        email: form.email,
-        password: form.password,
+      
+      const response = await fetch("http://localhost:3001/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: form.name,
+          email: form.email,
+          password: form.password,
+        }),
       });
+
+      // Verificar se a resposta é JSON antes de tentar ler
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        console.error("Resposta da API (não-JSON):", text);
+        throw new Error(`Erro na API (Status: ${response.status}). Verifique a consola.`);
+      }
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Se o backend enviar um erro detalhado (data.error), mostramos isso também
+        const errorMessage = data.error ? `${data.message} (${data.error})` : (data.message || "Erro ao criar conta.");
+        throw new Error(errorMessage);
+      }
+
       console.log("Registo OK:", data);
       navigate("/login");
     } catch (err) {
+      console.error("Erro detalhado:", err);
       setError(err.message || "Erro no registo.");
     } finally {
       setLoading(false);

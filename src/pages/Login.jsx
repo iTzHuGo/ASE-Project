@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../App.css"; 
-import { login as loginRequest } from "../services/authAPi";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -24,11 +23,31 @@ export default function Login() {
 
     try {
       setLoading(true);
-      const data = await loginRequest(form);
+      
+      // Chamada direta à API (Backend na porta 3001)
+      const response = await fetch("http://localhost:3001/api/auth/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      // Verificar se a resposta é JSON antes de tentar ler (evita o erro <!DOCTYPE...)
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("O servidor não retornou JSON. Verifique se o backend está a correr e o URL está correto.");
+      }
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Falha no login. Verifique as credenciais.");
+      }
+
       console.log("Login OK:", data);
       
-      // Guardar dados do utilizador (Simulação)
-      localStorage.setItem("user", JSON.stringify({ name: "Utilizador", email: form.email }));
+      // Guardar token e dados do utilizador reais
+      if (data.token) localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user || { email: form.email }));
       
       navigate("/catalog");
     } catch (err) {
