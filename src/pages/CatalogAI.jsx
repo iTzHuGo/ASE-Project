@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useMovies } from "../hooks/useMovies";
+import "../App.css";
 
 export default function CatalogAI() {
   const [search, setSearch] = useState("");
@@ -20,19 +21,19 @@ export default function CatalogAI() {
   };
 
   return (
-    <div style={{ padding: "1.5rem" }}>
-      <h1>Movies</h1>
+    <div className="page-container">
+      <h1 className="catalog-header">AI Movie Search</h1>
 
-      <form onSubmit={handleSubmit} style={{ marginBottom: "1rem" }}>
+      <form onSubmit={handleSubmit} style={{ marginBottom: "2rem", display: "flex", justifyContent: "center" }}>
         <input
           type="text"
           placeholder="Search for a movie..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          style={{ padding: "0.5rem", minWidth: "250px", marginRight: "0.5rem" }}
+          className="auth-input" style={{ maxWidth: "400px" }}
         />
-        <button type="submit">Search</button>
-        <button type="button" onClick={reload} style={{ marginLeft: "0.5rem" }}>
+        <button type="submit" className="landing-btn-primary" style={{ marginLeft: "1rem" }}>Search</button>
+        <button type="button" onClick={reload} className="landing-btn-ghost" style={{ marginLeft: "0.5rem" }}>
           Reload
         </button>
       </form>
@@ -44,40 +45,21 @@ export default function CatalogAI() {
         <p>No movies found.</p>
       )}
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
-          gap: "1rem",
-        }}
-      >
+      <div className="catalog-grid">
         {movies.map((m) => (
-          <article
-            key={m.id}
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-              padding: "0.5rem",
-              textAlign: "center",
-            }}
-          >
+          <article key={m.id} className="movie-card">
             {m.poster_path && (
               <img
-                src={`https://image.tmdb.org/t/p/w300${m.poster_path}`}
+                src={`https://image.tmdb.org/t/p/w500${m.poster_path}`}
                 alt={m.title}
-                style={{
-                  width: "100%",
-                  borderRadius: "4px",
-                  marginBottom: "0.5rem",
-                }}
               />
             )}
-            <h3 style={{ fontSize: "1rem", marginBottom: "0.25rem" }}>
-              {m.title}
-            </h3>
-            <p style={{ fontSize: "0.85rem", opacity: 0.8 }}>
-              ⭐ {m.vote_average?.toFixed?.(1) ?? "N/A"}
-            </p>
+            <div className="movie-info">
+              <h3 className="movie-title">{m.title}</h3>
+              <p style={{ fontSize: "0.85rem", color: "var(--accent)" }}>
+                ⭐ {m.vote_average?.toFixed?.(1) ?? "N/A"}
+              </p>
+            </div>
           </article>
         ))}
       </div>
