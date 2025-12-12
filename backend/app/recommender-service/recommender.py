@@ -5,9 +5,8 @@ import json
 global movies_df 
 global similarities_genres
 
+
 def similar_movies_recommendation(title, top_n=5):
-
-
     '''
     Docstring for similar_movies_recommendation
 
@@ -28,7 +27,12 @@ def similar_movies_recommendation(title, top_n=5):
     :param title: Movie title to search for similar movies
     :param movies_df: All movies dataframe
     :param top_n: Defaults to 5. Defines the number of movies to output
+
+    autor: miguel pereira
+    metodo: manual coding
+    fonte do algoritmo:  https://medium.com/@prateekgaurav/step-by-step-content-based-recommendation-system-823bbfd0541c
     '''
+
 
     matching_movies = movies_df[movies_df['title'].str.contains(title, case=False)]
     
@@ -71,6 +75,11 @@ def user_based_recommendation(userID, userMoviesReviews, top_n=5):
     :param userID: ID do utilizador
     :param userMoviesReviews: lista de filmes que o utilizador userID deu review
     :param top_n: Default = 5. Escolhe quantos filmes sugerir ao utilizador
+
+    autor: miguel pereira & ai assitent
+    metodo: ai-assited
+    descricao: esta feature baseia-se na de total autoria minha, foi utilizado assistencia de AI apenas para acelerar o processo, 
+    visto que estava ele todo feito, já
     '''
 
     if not userMoviesReviews or len(userMoviesReviews) == 0:
@@ -161,12 +170,6 @@ if __name__ == "__main__" :
 
     print(movies_df.head())
     print(f"\nTotal movies: {len(movies_df)}")
-
-    # Transforma numa matriz em que os ids dos filmes sao 
-    # o indice (colunas) e as colunas sao os ids do genero   
-    
-    
-
 
     movie_name = input("Enter movie name:")
     print(similar_movies_recommendation(movie_name))
