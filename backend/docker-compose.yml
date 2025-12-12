@@ -29,7 +29,6 @@ services:
     container_name: movie-api
     build:
       dockerfile: Dockerfile
-      context: ./app
     depends_on:
       db:
         condition: service_healthy
