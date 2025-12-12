@@ -19,7 +19,7 @@ exports.signup = async (req, res) => {
     const role = req.body.roles || "user";
 
     try {
-        const secretPassword = hashSync(req.body.password, 10);
+        const secretPassword = bcrypt.hashSync(req.body.password, 10);
         const query = 
         `INSERT INTO users (username, email, password, role)
         VALUES ($1, $2, $3, $4) RETURNING id, username, email, role`;
