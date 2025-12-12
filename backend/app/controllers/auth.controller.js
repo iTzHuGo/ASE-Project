@@ -1,9 +1,9 @@
 // app/controllers/auth.controller.js
 
-import { query as _query } from "../config/db.config.js";
-import { sign } from "jsonwebtoken";
-import { hashSync, compareSync } from "bcryptjs";
-import authConfig from "../config/auth.config.js";
+const db = require("../config/db.config.js");
+const authConfig = require("../config/auth.config.js");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 // ==========================================
 // FEATURE: SIGNUP (REGISTER)
@@ -12,7 +12,7 @@ import authConfig from "../config/auth.config.js";
 // DESCRIPTION: Controller to handle user signup requests, including
 //              validation, password hashing, and storing user data in the database.
 // ==========================================
-export async function signup(req, res) {
+exports.signup = async (req, res) => {
     const username = req.body.username;
     const email = req.body.email;
     
@@ -26,7 +26,7 @@ export async function signup(req, res) {
 
         const data = [username, email, secretPassword, role];
 
-        const results = await _query(query, data);
+        const results = await db.query(query, data);
 
         return res.status(201).json({
         message: 'User registered successfully.',
@@ -52,7 +52,7 @@ export async function signup(req, res) {
 // DESCRIPTION: Controller to handle user signin requests, including
 //              validation, password comparison, and JWT token generation.
 // ==========================================
-export async function signin(req, res) {
+exports.signin = async (req, res) => {
     const email = req.body.email;
     const pass = req.body.password;
 
@@ -66,7 +66,7 @@ export async function signin(req, res) {
         `SELECT * FROM users 
         WHERE email = $1`;
 
-        const results = await _query(query, [email]);
+        const results = await db.query(query, [email]);
 
         if (results.rows.length === 0) {
             return res.status(404).json({ message: "User not found." });
@@ -74,13 +74,13 @@ export async function signin(req, res) {
 
         const user = results.rows[0];
 
-        const passwordIsValid = compareSync(pass, user.password);
+        const passwordIsValid = bcrypt.compareSync(pass, user.password);
 
         if (!passwordIsValid) {
             return res.status(401).json({ accessToken: null, message: "Invalid Email or Password." });
         }
 
-        const jwtToken = sign({ id: user.id }, authConfig.secret, { expiresIn: 86400 });
+        const jwtToken = jwt.sign({ id: user.id }, authConfig.secret, { expiresIn: 86400 });
 
         const authority = "ROLE_" + user.role.toUpperCase();
 

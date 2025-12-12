@@ -2,9 +2,8 @@
 
 const express = require('express');
 const cors = require('cors');
-const db = require('./config/db.config');
-import authRoutes from "./app/routes/auth.routes.js";
-
+const db = require('./config/db.config.js');
+const authRoutes = require("./routes/auth.routes.js");
 
 
 const app = express();

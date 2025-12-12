@@ -3,7 +3,7 @@ name: ase-project
 services:
   db:
     container_name: movie-db
-    image: postgres:latest
+    image: postgres:16-alpine
     ports:
       - 5432:5432
     restart: unless-stopped
@@ -16,7 +16,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'",
+          "sh -c 'pg_isready -U ${DB_USER} -d ${DB_NAME}'",
         ]
       interval: 5s
       timeout: 10s
