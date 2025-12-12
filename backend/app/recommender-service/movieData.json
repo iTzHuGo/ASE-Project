@@ -1,0 +1,247 @@
+{
+  "page": 1,
+  "total_pages": 1,
+  "total_results": 40,
+  "results": [
+    {
+      "id": 1001,
+      "title": "Cosmic Drift",
+      "overview": "A lone pilot races against time to deliver a cryptic message across a collapsing galactic empire.",
+      "genre_ids": [28, 12, 878]
+    },
+    {
+      "id": 1002,
+      "title": "The Grand Misunderstanding",
+      "overview": "A wedding planner accidentally swaps identities with a secret agent during a lavish ceremony.",
+      "genre_ids": [35, 10749]
+    },
+    {
+      "id": 1003,
+      "title": "Whispers of the Sunstone",
+      "overview": "Three children embark on a magical quest to protect a legendary artifact from falling into the wrong hands.",
+      "genre_ids": [14, 12, 10751]
+    },
+    {
+      "id": 1004,
+      "title": "Silent Witness Protocol",
+      "overview": "A retired detective must solve a cold case that holds the key to a global financial conspiracy.",
+      "genre_ids": [80, 53, 9648]
+    },
+    {
+      "id": 1005,
+      "title": "The Last Post",
+      "overview": "Set during a relentless siege, two soldiers find an unlikely bond over a series of forgotten letters.",
+      "genre_ids": [10752, 18]
+    },
+    {
+      "id": 1006,
+      "title": "Viral Scream",
+      "overview": "A group of scientists track a fast-mutating, airborne virus that turns its victims into aggressive hosts.",
+      "genre_ids": [27, 878]
+    },
+    {
+      "id": 1007,
+      "title": "Echoes in the Forest",
+      "overview": "A young hiker discovers a forgotten civilization hidden deep within an ancient, uncharted forest.",
+      "genre_ids": [12, 14, 10751]
+    },
+    {
+      "id": 1008,
+      "title": "Two Summers Ago",
+      "overview": "A chance encounter forces two former high school sweethearts to confront their divergent life paths.",
+      "genre_ids": [10749, 18]
+    },
+    {
+      "id": 1009,
+      "title": "The Negotiator's Gambit",
+      "overview": "A hostage negotiator must outwit a brilliant bank robber who seems to anticipate every move.",
+      "genre_ids": [28, 53, 18]
+    },
+    {
+      "id": 1010,
+      "title": "Deep Dive: The Arctic Frontier",
+      "overview": "A documentary crew explores the untouched, freezing depths of the Arctic Ocean and its marine life.",
+      "genre_ids": [99]
+    },
+    {
+      "id": 1011,
+      "title": "Time Rift Zero",
+      "overview": "Scientists accidentally open a portal to the Mesozoic Era, unleashing prehistoric chaos.",
+      "genre_ids": [878, 12]
+    },
+    {
+      "id": 1012,
+      "title": "The Neighbor's Dog",
+      "overview": "A perpetually grumpy man is forced to dog-sit a highly intelligent and mischievous terrier.",
+      "genre_ids": [35, 10751]
+    },
+    {
+      "id": 1013,
+      "title": "Crimson Prophecy",
+      "overview": "In a world of elemental magic, a rogue wizard seeks to fulfill an ancient prophecy to save his people.",
+      "genre_ids": [14, 28, 12]
+    },
+    {
+      "id": 1014,
+      "title": "The Quiet Street",
+      "overview": "A psychological thriller about a neighborhood where everyone seems normal, except for one house.",
+      "genre_ids": [18, 53]
+    },
+    {
+      "id": 1015,
+      "title": "Bridge of Lies",
+      "overview": "A biopic chronicling the harrowing true story of a journalist embedded with resistance fighters.",
+      "genre_ids": [10752, 18]
+    },
+    {
+      "id": 1016,
+      "title": "Abyssal Horror",
+      "overview": "A deep-sea mining crew awakens an ancient, territorial creature in the deepest trench.",
+      "genre_ids": [27, 878]
+    },
+    {
+      "id": 1017,
+      "title": "The Lost Amulet",
+      "overview": "A brother and sister use a mysterious map to find a powerful artifact before a sorcerer does.",
+      "genre_ids": [14, 12, 10751]
+    },
+    {
+      "id": 1018,
+      "title": "The Midnight Express",
+      "overview": "A train heist thriller where the thieves are caught between a corrupt cop and a rival gang.",
+      "genre_ids": [80, 53, 9648]
+    },
+    {
+      "id": 1019,
+      "title": "Paper Hearts",
+      "overview": "A heartwarming story about two people who communicate only through handwritten letters.",
+      "genre_ids": [10749, 18]
+    },
+    {
+      "id": 1020,
+      "title": "High Rise",
+      "overview": "An action-thriller set entirely within a skyscraper under siege by a mercenary group.",
+      "genre_ids": [28, 53, 18]
+    },
+    {
+      "id": 1021,
+      "title": "The Art of Motion",
+      "overview": "A look at the physics and philosophy behind the world's most complex stunts and acrobatic feats.",
+      "genre_ids": [99]
+    },
+    {
+      "id": 1022,
+      "title": "Planet Nomads",
+      "overview": "A family survives a crash landing on an alien world and must cross the planet to reach a rescue beacon.",
+      "genre_ids": [878, 12]
+    },
+    {
+      "id": 1023,
+      "title": "The Worst Internship Ever",
+      "overview": "A college student navigates the hilarious challenges of an internship run by chaotic twins.",
+      "genre_ids": [35, 10751]
+    },
+    {
+      "id": 1024,
+      "title": "The Silent Spire",
+      "overview": "A lone warrior must ascend a dangerous mountain to face a malevolent entity that drains all magic.",
+      "genre_ids": [14, 28, 12]
+    },
+    {
+      "id": 1025,
+      "title": "Beneath the Surface",
+      "overview": "A drama about a family dealing with the disappearance of their patriarch during a coastal storm.",
+      "genre_ids": [18, 53]
+    },
+    {
+      "id": 1026,
+      "title": "Red Sand",
+      "overview": "A group of WWII tank operators must traverse a minefield to reach a critical strategic point.",
+      "genre_ids": [10752, 18]
+    },
+    {
+      "id": 1027,
+      "title": "The Infected",
+      "overview": "Survivors barricade themselves in a museum as a deadly, fast-moving plague sweeps the city.",
+      "genre_ids": [27, 878]
+    },
+    {
+      "id": 1028,
+      "title": "Celestial Compass",
+      "overview": "An animated adventure where a brave fox guides a lost star back to its constellation.",
+      "genre_ids": [14, 12, 10751]
+    },
+    {
+      "id": 1029,
+      "title": "The Clockwork Key",
+      "overview": "A period mystery about a young locksmith who discovers a secret society's clockwork cipher.",
+      "genre_ids": [80, 53, 9648]
+    },
+    {
+      "id": 1030,
+      "title": "Autumn Haze",
+      "overview": "A poignant drama about a musician rediscovering his passion after a sudden loss.",
+      "genre_ids": [10749, 18]
+    },
+    {
+      "id": 1031,
+      "title": "Vertical Limit",
+      "overview": "An elite climber is hired to retrieve classified data from a laboratory atop a treacherous peak.",
+      "genre_ids": [28, 53, 18]
+    },
+    {
+      "id": 1032,
+      "title": "The Coral Reef Odyssey",
+      "overview": "Exploring the fragile beauty and complex ecosystems of the world's most endangered coral reefs.",
+      "genre_ids": [99]
+    },
+    {
+      "id": 1033,
+      "title": "Aether Station",
+      "overview": "Life aboard a deep-space station is jeopardized when an unknown anomaly breaches the hull.",
+      "genre_ids": [878, 12]
+    },
+    {
+      "id": 1034,
+      "title": "Petty Crimes",
+      "overview": "Two amateur thieves try to pull off the least profitable, most embarrassing heist in city history.",
+      "genre_ids": [35, 10751]
+    },
+    {
+      "id": 1035,
+      "title": "The Dragon's Ascent",
+      "overview": "A young mage must learn to ride a wild dragon to defend his kingdom against a dark lord.",
+      "genre_ids": [14, 28, 12]
+    },
+    {
+      "id": 1036,
+      "title": "The Watcher on the Hill",
+      "overview": "A thriller about a witness protection family whose new home harbors a deadly secret.",
+      "genre_ids": [18, 53]
+    },
+    {
+      "id": 1037,
+      "title": "The Iron Cross",
+      "overview": "A compelling drama focused on a medic's struggle during the final chaotic days of World War I.",
+      "genre_ids": [10752, 18]
+    },
+    {
+      "id": 1038,
+      "title": "Deep Freeze",
+      "overview": "A research team in the Antarctic discovers an ancient alien relic buried deep in the ice.",
+      "genre_ids": [27, 878]
+    },
+    {
+      "id": 1039,
+      "title": "The Forest Guardians",
+      "overview": "When magic starts fading, two young apprentices must restore balance to the mystical forest.",
+      "genre_ids": [14, 12, 10751]
+    },
+    {
+      "id": 1040,
+      "title": "The Terminal Heist",
+      "overview": "A complicated heist to steal government secrets unfolds entirely within a busy international airport.",
+      "genre_ids": [80, 53, 9648]
+    }
+  ]
+}
