@@ -1,42 +1,468 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* ==========================
+   POPCORN GALAXY – LANDING PAGE
+   ========================== */
+
+/* Contém toda a página inicial */
+.landing-page {
+  min-height: 100vh;
+  padding: 2.5rem 1.5rem 3rem;
+  display: flex;
+  justify-content: center;
+}
+
+/* Limita a largura e cria uma grelha responsiva */
+.landing-inner {
+  width: 100%;
+  max-width: 1100px;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2.5fr);
+  gap: 2.5rem;
+  position: relative;
+}
+
+/* Orbes decorativos de glow */
+.landing-orb {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(40px);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.landing-orb--gold {
+  width: 260px;
+  height: 260px;
+  background: #facc15;
+  top: -60px;
+  right: -40px;
+}
+
+.landing-orb--purple {
+  width: 200px;
+  height: 200px;
+  background: #6366f1;
+  bottom: -40px;
+  left: -20px;
+}
+
+/* Coluna esquerda – texto principal */
+.landing-hero {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+}
+
+.landing-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(15, 23, 42, 0.9);
+  color: #e5e7eb;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.landing-badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: radial-gradient(circle at center, #22c55e, #16a34a);
+}
+
+.landing-title {
+  font-size: clamp(2.5rem, 4vw, 3rem);
+  line-height: 1.1;
+  font-weight: 800;
+}
+
+.landing-title span {
+  background: linear-gradient(to right, #facc15, #f97316);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.landing-subtitle {
+  max-width: 460px;
+  font-size: 0.98rem;
+  color: #9ca3af;
+}
+
+.landing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.landing-btn-primary {
+  border-radius: 999px;
+  padding-inline: 1.6rem;
+}
+
+.landing-btn-ghost {
+  border-radius: 999px;
+  padding-inline: 1.4rem;
+  background: transparent;
+  color: #e5e7eb;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+}
+
+.landing-btn-ghost:hover {
+  background: rgba(15, 23, 42, 0.85);
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.7);
+}
+
+.landing-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.4rem;
+  margin-top: 1.2rem;
+  font-size: 0.82rem;
+  color: #9ca3af;
+}
+
+.landing-meta-item strong {
+  display: block;
+  font-size: 0.95rem;
+  color: #e5e7eb;
+}
+
+/* Coluna direita – “card” grande com filmes */
+.landing-panel {
+  position: relative;
+  z-index: 1;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(8, 47, 73, 0.96));
+  border: 1px solid rgba(30, 64, 175, 0.7);
+  box-shadow: var(--shadow-soft);
+  padding: 1.4rem 1.4rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.landing-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.landing-panel-title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.landing-panel-chip {
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.16);
+  color: #6ee7b7;
+  font-size: 0.7rem;
+  border: 1px solid rgba(34, 197, 94, 0.35);
+}
+
+.landing-mini-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+}
+
+.landing-movie-card {
+  border-radius: 14px;
+  overflow: hidden;
+  background: radial-gradient(circle at top, #1f2937, #020617);
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.16s ease-out, box-shadow 0.16s ease-out, border-color 0.16s ease-out;
+  border: 1px solid rgba(15, 23, 42, 0.9);
+}
+
+.landing-movie-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.7);
+  border-color: rgba(148, 163, 184, 0.5);
+}
+
+.landing-movie-poster {
+  aspect-ratio: 2 / 3;
+  background-size: cover;
+  background-position: center;
+}
+
+.landing-movie-body {
+  padding: 0.25rem 0.5rem 0.5rem;
+}
+
+.landing-movie-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.landing-movie-meta {
+  font-size: 0.65rem;
+  color: #9ca3af;
+}
+
+/* Rodapé pequeno na landing */
+.landing-footer {
+  grid-column: 1 / -1;
+  margin-top: 2.2rem;
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+/* ==========================
+   RESPONSIVO LANDING
+   ========================== */
+
+@media (max-width: 900px) {
+  .landing-inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .landing-panel {
+    order: -1;
+  }
+
+  .landing-page {
+    padding-top: 1.8rem;
+  }
+}
+
+/* ==========================
+   AUTH – LOGIN & REGISTER
+   ========================== */
+
+.auth-page {
+  min-height: 100vh;
+  padding: 3rem 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;      /* 👉 centra verticalmente */
+}
+
+
+.auth-inner {
+  width: 100%;
+  max-width: 960px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: center;
+  position: relative;
+}
+
+/* Reutiliza o mesmo tipo de orbes */
+.auth-orb {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(38px);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.auth-orb--amber {
+  width: 220px;
+  height: 220px;
+  background: #facc15;
+  top: -40px;
+  right: -30px;
+}
+
+.auth-orb--indigo {
+  width: 190px;
+  height: 190px;
+  background: #4f46e5;
+  bottom: -30px;
+  left: -10px;
+}
+
+/* Lado “texto” */
+.auth-hero {
+  position: relative;
+  z-index: 1;
+  color: #e5e7eb;
+}
+
+
+.auth-kicker {
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  margin-bottom: 0.4rem;
+}
+
+.auth-hero-title {
+  font-size: clamp(2rem, 3vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 0.6rem;
+}
+
+.auth-hero-title span {
+  background: linear-gradient(to right, #facc15, #f97316);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.auth-hero-subtitle {
+  font-size: 0.96rem;
+  color: #9ca3af;
+  max-width: 360px;
+}
+
+/* Card do formulário */
+.auth-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  margin-left: auto;
+  border-radius: var(--radius-lg);
+  background: rgba(15, 23, 42, 0.96);                 /* fundo mais escuro e sólido */
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  box-shadow: var(--shadow-soft);
+  padding: 1.8rem 1.8rem 1.5rem;
+  backdrop-filter: blur(20px);
+  animation: fadeIn 0.35s ease-out;
+  color: #e5e7eb;                                     /* garante texto claro */
+}
+
+
+.auth-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: rgba(15, 23, 42, 0.9);
+  color: #9ca3af;
+  font-size: 0.7rem;
+  margin-bottom: 0.9rem;
+}
+
+.auth-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.auth-subtitle {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  margin-bottom: 1rem;
+}
+
+/* Formulário */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.auth-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(59, 130, 246, 0.7);          /* azul mais vivo */
+  background: #020617;                                /* quase preto, mas não puro */
+  color: #f9fafb;                                     /* texto bem claro */
+  font-size: 0.95rem;
+  transition:
+    border-color 0.18s ease-out,
+    box-shadow 0.18s ease-out,
+    background 0.18s ease-out;
+}
+
+.auth-input::placeholder {
+  color: #9ca3af;                                     /* cinzento mediano, visível */
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: #020617;
+  box-shadow: 0 0 0 1px var(--accent-soft);
+}
+
+
+.auth-error {
+  margin-top: 0.1rem;
+  font-size: 0.8rem;
+  color: #fca5a5;
+}
+
+.auth-btn {
+  margin-top: 0.4rem;
+  width: 100%;
+}
+
+.auth-footer {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  color: #9ca3af;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.auth-footer a {
+  color: var(--accent-strong);
 }
 
-@keyframes logo-spin {
+.auth-footer a:hover {
+  color: #f97316;
+}
+
+/* Responsivo auth */
+@keyframes fadeIn {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: translateY(10px);
   }
   to {
-    transform: rotate(360deg);
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+@media (max-width: 900px) {
+  .auth-inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.8rem;
+  }
+
+  .auth-card {
+    margin-left: 0;
   }
 }
 
-.card {
-  padding: 2em;
-}
+@media (max-width: 640px) {
+  .landing-page,
+  .auth-page {
+    padding-inline: 1.1rem;
+  }
 
-.read-the-docs {
-  color: #888;
+  .landing-inner {
+    gap: 1.8rem;
+  }
 }
