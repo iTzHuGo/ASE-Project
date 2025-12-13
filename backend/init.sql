@@ -80,11 +80,11 @@ INSERT INTO movies (tmdb_id, title, release_date, duration_min, synopsis, genre)
 (603, 'The Matrix', '1999-03-31', 136, 'A computer hacker learns from mysterious rebels...', 'Action'),
 (238, 'The Godfather', '1972-03-14', 175, 'Spanning the years 1945 to 1955...', 'Crime');
 
--- 2. Insert Users 
+-- 2. Insert Users with 'password' as the password
 INSERT INTO users (username, email, password, role) VALUES 
-('Alice', 'alice@gmail.com', 'hashed_secret', 'user'),
-('admin', 'admin@gmail.com', 'tacobell', 'admin'),
-('Bob', 'bob@gmail.com', 'hashed_secret', 'user');
+('Alice', 'alice@gmail.com', '$2b$10$f3WAfEyfuHTDaJPiHs1Th.N.3heOGAFDYt.lHKFlxV0mCnO26kCgG', 'user'),
+('admin', 'admin@gmail.com', '$2b$10$f3WAfEyfuHTDaJPiHs1Th.N.3heOGAFDYt.lHKFlxV0mCnO26kCgG', 'admin'),
+('Bob', 'bob@gmail.com', '$2b$10$f3WAfEyfuHTDaJPiHs1Th.N.3heOGAFDYt.lHKFlxV0mCnO26kCgG', 'user');
 
 
 -- 3. Insert Rating
