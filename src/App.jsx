@@ -3,6 +3,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Catalog from "./pages/Catalog";
 import CatalogAI from "./pages/CatalogAI";
+import Movie from "./pages/Movie";
+
+
 
 export default function App() {
   return (
@@ -11,7 +14,7 @@ export default function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/catalog" element={<Catalog />} />
       <Route path="/catalogAI" element={<CatalogAI/>} />
-
-    </Routes>
+      <Route path="/movie/:id" element={<Movie/>} />
+      </Routes>
   );
 }
