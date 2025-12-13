@@ -11,11 +11,6 @@ import {
 const router = express.Router();
  
  
-// Route for the flask service to fect users movies
-
-//full path : /api/recommend/user/:userId
-router.get("/user/:userId",getRatedMoviesByUser );
-
-router.post("/movie-recommendation", recommendBasedOnMovie);
+router.get("/user/:userId", getRatedMoviesByUser);
  
 export default router;
