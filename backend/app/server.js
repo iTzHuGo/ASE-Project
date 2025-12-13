@@ -4,7 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./config/db.config.js');
 const authRoutes = require("./routes/auth.routes.js");
-const recommendationRoutes  = require('./app/routes/recommendation.routes.js');
+const recommendationRoutes  = require('./routes/recommendation.routes.js');
 
 
 

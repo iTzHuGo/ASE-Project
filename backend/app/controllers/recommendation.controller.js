@@ -1,21 +1,23 @@
 // app/controllers/recommendation.controller.js
 
-import { query as _query } from "../config/db.config.js";
-import fetch from 'node-fetch';
+const db = require("../config/db.config.js");
+const _query = db.query;
+// Importação dinâmica para node-fetch (compatível com CJS)
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 const TMDB_API_URL = 'https://api.themoviedb.org/3';
 const TMDB_API_KEY = process.env.TMDB_API_KEY;
 
 
 
-export const recommendBasedOnMovie = async (req, res) => {
+exports.recommendBasedOnMovie = async (req, res) => {
     const title = req.body.title;
     const topN = req.body.topN || 5;
     
     try {
         
             // enviar request ao api do flask
-        const response = await fetch('https://localhost:5000/recommend/movie/<title>', {
+        const response = await fetch('http://localhost:5000/recommend/movie/<title>', {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ title, topN })
@@ -38,7 +40,7 @@ export const recommendBasedOnMovie = async (req, res) => {
     }
 }
 
-export const getRatedMoviesByUser = async (req, res) => {
+exports.getRatedMoviesByUser = async (req, res) => {
     const userId = req.params.userId;
 
     if (!userId) {
@@ -70,8 +72,8 @@ export const getRatedMoviesByUser = async (req, res) => {
         const enrichmentPromises = dbRatings.map(async (rating) => {
             const genreIds = await getTmdbMovieGenres(rating.tmdb_id);
             return {
-                id: row.movie_id,
-                rating: row.rating_value,
+                id: rating.movie_id,
+                rating: rating.rating_value,
                 tmdb_id: rating.tmdb_id,
                 genres: genreIds
             };
@@ -96,14 +98,14 @@ export const getRatedMoviesByUser = async (req, res) => {
 }
         
 
-export const recommendForUser = async (req, res) => {
+exports.recommendForUser = async (req, res) => {
     const userId = req.body.userId;
     const topN = req.body.topN || 5;
 
     try {
         
             // enviar request ao api do flask
-        const response = await fetch('https://localhost:5000/recommend/user/<userId>', {
+        const response = await fetch('http://localhost:5000/recommend/user/<userId>', {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId, topN })
@@ -145,7 +147,3 @@ export const recommendForUser = async (req, res) => {
             return [];
         }
     }
-    
-
-    export {recommendBasedOnMovie};
-    export {getRatedMoviesByUser};
