@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     role VARCHAR(50) DEFAULT 'user', -- 'admin' or 'user'
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -81,7 +81,7 @@ INSERT INTO movies (tmdb_id, title, release_date, duration_min, synopsis, genre)
 (238, 'The Godfather', '1972-03-14', 175, 'Spanning the years 1945 to 1955...', 'Crime');
 
 -- 2. Insert Users 
-INSERT INTO users (username, email, password_hash, role) VALUES 
+INSERT INTO users (username, email, password, role) VALUES 
 ('Alice', 'alice@gmail.com', 'hashed_secret', 'user'),
 ('admin', 'admin@gmail.com', 'tacobell', 'admin'),
 ('Bob', 'bob@gmail.com', 'hashed_secret', 'user');

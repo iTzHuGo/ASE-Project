@@ -21,7 +21,7 @@ export default function ProfileButton() {
   return (
     <Link to={isProfilePage ? "/" : (user ? "/profile" : "/login")} className="profile-floating-btn">
       <div className="profile-avatar">
-        {isProfilePage ? "🏠" : (user ? user.name.charAt(0).toUpperCase() : "➜")}
+        {isProfilePage ? "🏠" : (user && user.name ? user.name.charAt(0).toUpperCase() : "➜")}
       </div>
       <span className="profile-label">{isProfilePage ? "Home" : (user ? "Conta" : "Login")}</span>
     </Link>

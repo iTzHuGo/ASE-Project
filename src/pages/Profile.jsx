@@ -51,13 +51,15 @@ export default function Profile() {
     setIsEditing(false); // Fecha o modal
   };
 
+  const names = user?.name ? user.name.split(" ") : ["Utilizador"];
+
   return (
     <div className="page-container">
       
       {/* CABEÇALHO DO PERFIL */}
       <header className="profile-header">
         <div className="profile-welcome">
-          <h1>Olá, {user.name.split(" ")[0]}! 👋</h1>
+          <h1>Olá, {names}! 👋</h1>
           <p>Membro desde 2024 • {watchedMovies.length} filmes vistos este mês</p>
         </div>
         <button onClick={() => setIsEditing(true)} className="landing-btn-ghost">

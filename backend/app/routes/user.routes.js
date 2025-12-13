@@ -6,7 +6,7 @@ import {
     userBoard,
     adminBoard,
 } from "../controllers/checkUser.controller.js";
-import { authJwt } from "../middlewares/index.js";
+import { authJwt } from "../middleware/index.js";
  
 const router = express.Router();
  

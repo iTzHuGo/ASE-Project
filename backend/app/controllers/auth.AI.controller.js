@@ -46,7 +46,7 @@ exports.signup = async (req, res) => {
 
     // --- 5. Insert new user ---
     const insertQuery = `
-      INSERT INTO users (username, email, password_hash, role)
+      INSERT INTO users (username, email, password, role)
       VALUES ($1, $2, $3, $4)
       RETURNING id, username, email, role;
     `;

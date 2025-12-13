@@ -4,6 +4,8 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./config/db.config.js');
 const authRoutes = require("./routes/auth.routes.js");
+const recommendationRoutes  = require('./routes/recommendation.routes.js');
+
 
 
 const app = express();
@@ -29,6 +31,8 @@ app.get('/api/health', (req, res) => {
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/recommendation', recommendationRoutes);
+
 
 
 // Set port, listen for requests
