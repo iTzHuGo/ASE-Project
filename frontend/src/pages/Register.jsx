@@ -3,6 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import "../App.css"; 
 
 export default function Register() {
+	const API_URL = import.meta.env.VITE_API_URL;
+
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -31,7 +33,7 @@ export default function Register() {
     try {
       setLoading(true);
       
-      const response = await fetch("http://localhost:3001/api/auth/signup", {
+      const response = await fetch(`${API_URL}/api/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

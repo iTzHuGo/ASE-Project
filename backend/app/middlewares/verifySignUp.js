@@ -1,6 +1,6 @@
 // app/middleware/verifySignUp.js
 
-const db = require("../config/db.config.js");
+import db from "../config/db.config.js";
 
 const ROLES = ["user", "admin"];
 
@@ -45,4 +45,4 @@ const verifySignUp = {
     checkRolesExisted
 };
 
-module.exports = verifySignUp;
+export default verifySignUp;

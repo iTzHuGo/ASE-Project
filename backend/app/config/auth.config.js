@@ -1,7 +1,7 @@
 // app/config/auth.config.js
 
-require('dotenv').config();
+import 'dotenv/config.js';
 
-module.exports = {
+export default {
     secret: process.env.JWT_SECRET
 };
