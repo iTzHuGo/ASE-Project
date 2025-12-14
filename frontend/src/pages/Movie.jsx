@@ -16,6 +16,7 @@ export default function Movie() {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   useEffect(() => {
     fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&include_adult=false`)
@@ -63,11 +64,51 @@ export default function Movie() {
 
       if (response.ok) {
         setRating(value);
+        setToastMessage("Rating guardado com sucesso!");
         setShowToast(true);
         setTimeout(() => setShowToast(false), 3000); // Esconde após 3 segundos
       }
     } catch (error) {
       console.error("Erro ao enviar rating:", error);
+    }
+  };
+
+  const handleWatchlist = async () => {
+    const userStr = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
+    
+    if (!userStr || !token) {
+      alert("Por favor, faz login para adicionares à watchlist.");
+      navigate("/login");
+      return;
+    }
+
+    const genreIds = movie.genres ? movie.genres.map(g => g.id) : [];
+
+    try {
+      const response = await fetch(`${API_URL}/api/user/watchlist`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": token
+        },
+        body: JSON.stringify({ 
+          movieId: movie.id, 
+          title: movie.title,
+          poster_path: movie.poster_path,
+          release_date: movie.release_date,
+          overview: movie.overview,
+          genre_ids: genreIds
+        })
+      });
+
+      if (response.ok) {
+        setToastMessage("Filme adicionado à Watchlist!");
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+      }
+    } catch (error) {
+      console.error("Erro ao adicionar à watchlist:", error);
     }
   };
 
@@ -79,7 +120,7 @@ return (
       {showToast && (
         <div className="toast-notification">
           <span style={{ fontSize: "1.2rem" }}>✨</span>
-          Rating guardado com sucesso!
+          {toastMessage}
         </div>
       )}
 
@@ -119,6 +160,14 @@ return (
             <span>•</span>
             <span>{movie.genres?.map(g => g.name).join(", ")}</span>
           </div>
+
+          <button 
+            onClick={handleWatchlist} 
+            className="landing-btn-ghost" 
+            style={{ marginBottom: "2rem", borderColor: "var(--accent)", color: "var(--accent)" }}
+          >
+            + Add to Watchlist
+          </button>
 
           <h3 style={{ fontSize: "1.2rem", marginBottom: "0.5rem", color: "var(--accent)" }}>Synopsis</h3>
           <p style={{ lineHeight: "1.6", color: "#e2e8f0", marginBottom: "2rem" }}>

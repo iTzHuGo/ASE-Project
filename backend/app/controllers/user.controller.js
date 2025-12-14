@@ -50,3 +50,86 @@ export const rateMovie = async (req, res) => {
         res.status(500).json({ message: "Error submitting rating.", error: error.message });
     }
 };
+
+// ==========================================
+// FEATURE: ADD TO WATCHLIST
+// DESCRIPTION: Adds a movie to the user's 'Watchlist'.
+//              Creates the list if it doesn't exist.
+// ==========================================
+export const addToWatchlist = async (req, res) => {
+    const userId = req.userId;
+    const { movieId, title, poster_path, release_date, overview, genre_ids } = req.body;
+
+    if (!movieId) {
+        return res.status(400).json({ message: "Movie ID is required." });
+    }
+
+    try {
+        // 1. Garantir que o filme existe na tabela 'movies'
+        const movieQuery = `
+            INSERT INTO movies (tmdb_id, title, poster_path, release_date, synopsis, genre_ids)
+            VALUES ($1, $2, $3, $4, $5, $6)
+            ON CONFLICT (tmdb_id) 
+            DO UPDATE SET 
+                title = EXCLUDED.title,
+                genre_ids = EXCLUDED.genre_ids
+            RETURNING id;
+        `;
+        
+        const validDate = release_date || null;
+        const movieResult = await db.query(movieQuery, [movieId, title || "Untitled", poster_path, validDate, overview, genre_ids || []]);
+        const internalMovieId = movieResult.rows[0].id;
+
+        // 2. Verificar se a lista 'Watchlist' existe para o user, se não, criar
+        let listQuery = `SELECT id FROM lists WHERE user_id = $1 AND name = 'Watchlist'`;
+        let listResult = await db.query(listQuery, [userId]);
+        
+        let listId;
+        if (listResult.rows.length === 0) {
+            const createListQuery = `INSERT INTO lists (user_id, name) VALUES ($1, 'Watchlist') RETURNING id`;
+            const createListResult = await db.query(createListQuery, [userId]);
+            listId = createListResult.rows[0].id;
+        } else {
+            listId = listResult.rows[0].id;
+        }
+
+        // 3. Adicionar filme à lista
+        const addQuery = `
+            INSERT INTO list_movie (list_id, movie_id)
+            VALUES ($1, $2)
+            ON CONFLICT (list_id, movie_id) DO NOTHING;
+        `;
+        
+        await db.query(addQuery, [listId, internalMovieId]);
+
+        res.status(201).json({ message: "Movie added to Watchlist successfully!" });
+    } catch (error) {
+        console.error("Error adding to watchlist:", error);
+        res.status(500).json({ message: "Error adding to watchlist.", error: error.message });
+    }
+};
+
+// ==========================================
+// FEATURE: GET WATCHLIST
+// DESCRIPTION: Retrieves all movies from the user's 'Watchlist'.
+// ==========================================
+export const getWatchlist = async (req, res) => {
+    const userId = req.userId;
+
+    try {
+        const query = `
+            SELECT m.tmdb_id AS id, m.title, m.poster_path, m.release_date, m.synopsis, m.genre_ids
+            FROM movies m
+            JOIN list_movie lm ON m.id = lm.movie_id
+            JOIN lists l ON l.id = lm.list_id
+            WHERE l.user_id = $1 AND l.name = 'Watchlist'
+        `;
+        
+        const result = await db.query(query, [userId]);
+
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error("Error fetching watchlist:", error);
+        res.status(500).json({ message: "Error fetching watchlist.", error: error.message });
+    }
+};

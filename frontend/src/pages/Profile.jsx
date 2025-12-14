@@ -12,6 +12,7 @@ export default function Profile() {
   
   const [watchedMovies, setWatchedMovies] = useState([]);
   const [recommendedMovies, setRecommendedMovies] = useState([]);
+  const [watchlist, setWatchlist] = useState([]);
 
   useEffect(() => {
     if (!authUser) {
@@ -54,6 +55,20 @@ export default function Profile() {
           }
         })
         .catch(err => console.error("Erro ao carregar filmes vistos:", err));
+    }
+
+    // 3. Carregar Watchlist
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetch(`${API_URL}/api/user/watchlist`, {
+        headers: { "x-access-token": token }
+      })
+      .then(res => {
+        if (res.ok) return res.json();
+        return [];
+      })
+      .then(data => setWatchlist(data))
+      .catch(err => console.error("Erro ao carregar watchlist:", err));
     }
 
   }, [navigate, authUser]);
@@ -102,6 +117,21 @@ export default function Profile() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* SECÇÃO: WATCHLIST */}
+      <section>
+        <h2 className="section-title">Minha Watchlist</h2>
+        <div className="catalog-grid">
+          {watchlist.length > 0 ? watchlist.map(m => (
+            <div key={m.id} className="movie-card">
+              <img src={`https://image.tmdb.org/t/p/w500${m.poster_path}`} alt={m.title} />
+              <div className="movie-info">
+                <h3 className="movie-title">{m.title}</h3>
+              </div>
+            </div>
+          )) : <p style={{ color: "var(--text-muted)" }}>Ainda não adicionaste filmes à watchlist.</p>}
         </div>
       </section>
 

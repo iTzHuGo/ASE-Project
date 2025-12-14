@@ -40,8 +40,8 @@ CREATE TABLE IF NOT EXISTS ratings (
     UNIQUE (user_id, movie_id)
 );
 
--- Table: list
-CREATE TABLE IF NOT EXISTS list (
+-- Table: lists
+CREATE TABLE IF NOT EXISTS lists (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(512) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS list_movie (
     added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     
     PRIMARY KEY (list_id, movie_id),
-    FOREIGN KEY (list_id) REFERENCES list(id) ON DELETE CASCADE,
+    FOREIGN KEY (list_id) REFERENCES lists(id) ON DELETE CASCADE,
     FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE
 );
 
@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS genre_names (
 CREATE OR REPLACE FUNCTION create_default_user_lists()
 RETURNS TRIGGER AS $$
 BEGIN
-    INSERT INTO list (user_id, name) VALUES (NEW.id, 'Favorites');
+    INSERT INTO lists (user_id, name) VALUES (NEW.id, 'Favorites');
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
