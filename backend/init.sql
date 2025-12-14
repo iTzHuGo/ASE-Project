@@ -96,9 +96,9 @@ INSERT INTO genre_names (id, name) VALUES
 
 -- 1. Insert Movies
 INSERT INTO movies (tmdb_id, title, release_date, duration_min, synopsis, genre_ids) VALUES 
-(27205, 'Inception', '2010-07-16', 148, 'A thief who steals corporate secrets...', NULL, '{878, 28, 12}'),
-(603, 'The Matrix', '1999-03-31', 136, 'A computer hacker learns from mysterious rebels...', NULL, '{28, 878}'),
-(238, 'The Godfather', '1972-03-14', 175, 'Spanning the years 1945 to 1955...', NULL, '{80, 18}');
+(27205, 'Inception', '2010-07-16', 148, 'A thief who steals corporate secrets...', '{878, 28, 12}'),
+(603, 'The Matrix', '1999-03-31', 136, 'A computer hacker learns from mysterious rebels...', '{28, 878}'),
+(238, 'The Godfather', '1972-03-14', 175, 'Spanning the years 1945 to 1955...', '{80, 18}');
 
 -- 2. Insert Users with 'password' as the password
 INSERT INTO users (username, email, password, role) VALUES 
