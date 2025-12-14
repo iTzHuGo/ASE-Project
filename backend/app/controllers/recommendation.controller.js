@@ -70,7 +70,7 @@ export const getRecommendationsForUser = async (req, res) => {
         `;
     const { rows: userRatings } = await db.query(sql, [userId]);
 
-    if (userRatings.length() == 0){
+    if (userRatings.length == 0){
       return res.status(404).json({ message: `User ${userId} has no ratings.` });
     }
 

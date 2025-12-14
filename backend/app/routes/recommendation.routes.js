@@ -8,7 +8,7 @@ const router = express.Router();
 // ---- USER RATINGS ROUTE
 // this is a helper rout for flask to get the movies rated by a USER
 // its simple this way instead of sending them on the recomendation route for user ID
-router.get("/user/:userId", getRatedMoviesByUser);
+//router.get("/user/:userId", getRatedMoviesByUser);
 
 
 // ---- RECOMENDATION ROUTES ----

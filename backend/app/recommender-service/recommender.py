@@ -34,7 +34,7 @@ def _build_genre_matrix():
     all_genre_ids = genres_df['id'].tolist()
     return genre_matrix.reindex(columns=all_genre_ids, fill_value=0).astype(int)
 
-
+"""
 def get_user_movie_ratings_from_express(user_id: int):
     if not EXPRESS_URL:
         return None
@@ -48,7 +48,7 @@ def get_user_movie_ratings_from_express(user_id: int):
     except requests.RequestException as e:
         print(f"Error fetching user ratings from Express: {e}")
         return None
-
+"""
 
 def similar_movies_recommendation(title, top_n=5):
     '''
