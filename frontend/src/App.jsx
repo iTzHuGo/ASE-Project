@@ -6,10 +6,11 @@ import CatalogAI from "./pages/CatalogAI";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import ProfileButton from "./components/ProfileButton";
+import { AuthProvider } from "./hooks/AuthContext";
 
 export default function App() {
   return (
-    <>
+    <AuthProvider>
       <ProfileButton />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -19,6 +20,6 @@ export default function App() {
         <Route path="/catalogAI" element={<CatalogAI/>} />
         <Route path="/profile" element={<Profile />} />
       </Routes>
-    </>
+    </AuthProvider>
   );
 }

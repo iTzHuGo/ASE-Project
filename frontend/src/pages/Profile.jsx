@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../App.css";
+import { useAuth } from "../hooks/AuthContext";
 
 export default function Profile() {
   const navigate = useNavigate();
+  const { user: authUser, logout, login: saveUser } = useAuth();
   const [user, setUser] = useState({ name: "", email: "" });
   const [isEditing, setIsEditing] = useState(false); // Controla o Pop-up
   
@@ -11,11 +13,10 @@ export default function Profile() {
   const [recommendedMovies, setRecommendedMovies] = useState([]);
 
   useEffect(() => {
-    const stored = localStorage.getItem("user");
-    if (!stored) {
+    if (!authUser) {
       navigate("/login"); // Se não houver user, manda para login
     } else {
-      setUser(JSON.parse(stored));
+      setUser({ ...authUser, name: authUser.name || authUser.username || "" });
     }
 
     // Carregar filmes da API para simular dados
@@ -38,20 +39,20 @@ export default function Profile() {
       .then(r => r.json())
       .then(data => setRecommendedMovies(data.results.slice(0, 4)));
 
-  }, [navigate]);
+  }, [navigate, authUser]);
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
+    logout();
     navigate("/");
   };
 
   const handleSave = (e) => {
     e.preventDefault();
-    localStorage.setItem("user", JSON.stringify(user));
+    saveUser(user);
     setIsEditing(false); // Fecha o modal
   };
 
-  const names = user?.name ? user.name.split(" ") : ["Utilizador"];
+  const firstName = user?.name ? user.name.split(" ")[0] : "Utilizador";
 
   return (
     <div className="page-container">
@@ -59,12 +60,17 @@ export default function Profile() {
       {/* CABEÇALHO DO PERFIL */}
       <header className="profile-header">
         <div className="profile-welcome">
-          <h1>Olá, {names}! 👋</h1>
+          <h1>Olá, {firstName}! 👋</h1>
           <p>Membro desde 2024 • {watchedMovies.length} filmes vistos este mês</p>
         </div>
-        <button onClick={() => setIsEditing(true)} className="landing-btn-ghost">
-          Editar Perfil
-        </button>
+        <div style={{ display: "flex", gap: "1rem" }}>
+          <button onClick={() => setIsEditing(true)} className="landing-btn-ghost">
+            Editar Perfil
+          </button>
+          <button onClick={handleLogout} className="landing-btn-ghost" style={{ borderColor: "#ef4444", color: "#ef4444" }}>
+            Sair
+          </button>
+        </div>
       </header>
 
       {/* SECÇÃO: RECOMENDADOS */}
