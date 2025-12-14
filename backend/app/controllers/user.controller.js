@@ -133,3 +133,64 @@ export const getWatchlist = async (req, res) => {
         res.status(500).json({ message: "Error fetching watchlist.", error: error.message });
     }
 };
+
+// ==========================================
+// FEATURE: REMOVE FROM WATCHLIST
+// DESCRIPTION: Removes a movie from the user's 'Watchlist'.
+// ==========================================
+export const removeFromWatchlist = async (req, res) => {
+    const userId = req.userId;
+    const movieId = req.params.movieId; // TMDB ID passado no URL
+
+    if (!movieId) {
+        return res.status(400).json({ message: "Movie ID is required." });
+    }
+
+    try {
+        const query = `
+            DELETE FROM list_movie
+            WHERE list_id = (SELECT id FROM lists WHERE user_id = $1 AND name = 'Watchlist')
+            AND movie_id = (SELECT id FROM movies WHERE tmdb_id = $2)
+        `;
+        
+        const result = await db.query(query, [userId, movieId]);
+
+        res.status(200).json({ message: "Movie removed from Watchlist successfully!", deletedCount: result.rowCount });
+    } catch (error) {
+        console.error("Error removing from watchlist:", error);
+        res.status(500).json({ message: "Error removing from watchlist.", error: error.message });
+    }
+};
+
+// ==========================================
+// FEATURE: GET USER RATING
+// DESCRIPTION: Retrieves the rating a user gave to a specific movie.
+// ==========================================
+export const getUserRating = async (req, res) => {
+    const userId = req.userId;
+    const movieId = req.params.movieId; // TMDB ID
+
+    if (!movieId) {
+        return res.status(400).json({ message: "Movie ID is required." });
+    }
+
+    try {
+        const query = `
+            SELECT r.rating_value
+            FROM ratings r
+            JOIN movies m ON m.id = r.movie_id
+            WHERE r.user_id = $1 AND m.tmdb_id = $2
+        `;
+        
+        const result = await db.query(query, [userId, movieId]);
+
+        if (result.rows.length > 0) {
+            res.status(200).json({ rating: result.rows[0].rating_value });
+        } else {
+            res.status(200).json({ rating: null });
+        }
+    } catch (error) {
+        console.error("Error fetching user rating:", error);
+        res.status(500).json({ message: "Error fetching rating.", error: error.message });
+    }
+};
