@@ -37,27 +37,6 @@ export const getRatedMoviesByUser = async (req, res) => {
         `;
 
         const { rows } = await db(sql, [userId]);
-        const results = await _query(sql, [userId]);
-        const dbRatings = results.rows;
-
-        if (dbRatings.length === 0) {
-            return res.status(404).json({
-                message: `No ratings found for user ID ${userId}.`
-            });
-        }
-
-        const enrichmentPromises = dbRatings.map(async (rating) => {
-            const genreIds = await getTmdbMovieGenres(rating.tmdb_id);
-            return {
-                id: row.movie_id,
-                rating: row.rating_value,
-                tmdb_id: rating.tmdb_id,
-                genres: genreIds
-            };
-        });
-
-        const enrichedRatings = await Promise.all(enrichmentPromises);
-
         return res.status(200).json({
         user_id: userId,
         ratings: rows,

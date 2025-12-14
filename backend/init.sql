@@ -11,7 +11,6 @@ CREATE TABLE IF NOT EXISTS users (
 -- 2. Movies Table (Cache/Reference for TMDB)
 CREATE TABLE IF NOT EXISTS movies (
     id SERIAL PRIMARY KEY,
-    tmdb_id INT UNIQUE NOT NULL, -- Crucial: Link to external API
     title TEXT NOT NULL,
     release_date DATE,
     duration_min INT,
@@ -95,7 +94,7 @@ INSERT INTO genre_names (id, name) VALUES
 (53, 'Thriller');
 
 -- 1. Insert Movies
-INSERT INTO movies (tmdb_id, title, release_date, duration_min, synopsis, genre) VALUES 
+INSERT INTO movies (tmdb_id, title, release_date, duration_min, synopsis, genre_ids) VALUES 
 (27205, 'Inception', '2010-07-16', 148, 'A thief who steals corporate secrets...', NULL, '{878, 28, 12}'),
 (603, 'The Matrix', '1999-03-31', 136, 'A computer hacker learns from mysterious rebels...', NULL, '{28, 878}'),
 (238, 'The Godfather', '1972-03-14', 175, 'Spanning the years 1945 to 1955...', NULL, '{80, 18}');
