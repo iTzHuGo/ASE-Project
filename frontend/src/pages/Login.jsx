@@ -6,8 +6,6 @@ import { useAuth } from "../hooks/AuthContext";
 export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
-	const API_URL = import.meta.env.VITE_API_URL;
-
 
   const [form, setForm] = useState({
     email: "",
