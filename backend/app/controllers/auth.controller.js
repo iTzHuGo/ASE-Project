@@ -1,9 +1,9 @@
 // app/controllers/auth.controller.js
 
-const db = require("../config/db.config.js");
-const authConfig = require("../config/auth.config.js");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
+import db from "../config/db.config.js";
+import authConfig from "../config/auth.config.js";
+import jwt from "jsonwebtoken";
+import * as bcrypt from 'bcryptjs';
 
 // ==========================================
 // FEATURE: SIGNUP (REGISTER)
@@ -12,7 +12,7 @@ const bcrypt = require("bcryptjs");
 // DESCRIPTION: Controller to handle user signup requests, including
 //              validation, password hashing, and storing user data in the database.
 // ==========================================
-exports.signup = async (req, res) => {
+export const signup = async (req, res) => {
     const username = req.body.username;
     const email = req.body.email;
     
@@ -52,7 +52,7 @@ exports.signup = async (req, res) => {
 // DESCRIPTION: Controller to handle user signin requests, including
 //              validation, password comparison, and JWT token generation.
 // ==========================================
-exports.signin = async (req, res) => {
+export const signin = async (req, res) => {
     const email = req.body.email;
     const pass = req.body.password;
 

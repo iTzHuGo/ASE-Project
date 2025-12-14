@@ -1,18 +1,23 @@
-// app/routes/auth.routes.js
-
-const express = require("express");
-
-const controller = require("../controllers/recommendation.controller.js");
+// app/routes/recommendation.routes.js
+import express from "express";
+import {getRecommendationsForMovie, getRecommendationsForUser } from "../controllers/recommendation.controller.js";
 
 
 const router = express.Router();
  
- 
-// Route for the flask service to fect users movies
+// ---- RECOMENDATION ROUTES ----
 
-//full path : /api/recommend/user/:userId
-router.get("/user/:userId", controller.getRatedMoviesByUser);
 
-router.post("/movie-recommendation", controller.recommendBasedOnMovie);
- 
-module.exports = router;
+// GET /api/recommendation/movie?title=Inception
+// Uses QUERY PAREMETER for the movie title
+// Calls the flask api recommendation based on a movie
+router.get("/movie", getRecommendationsForMovie)
+
+
+// GET /api/recommendation/movie?title=Inception
+// Uses PATH VARIABLE for the user Id
+// Calls the flask api for recommendation based on user rated movies
+router.get("/user/:userId", getRecommendationsForUser)
+
+
+export default router;

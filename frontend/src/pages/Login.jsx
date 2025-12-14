@@ -26,8 +26,7 @@ export default function Login() {
     try {
       setLoading(true);
       
-      // Chamada direta à API (Backend na porta 3001)
-      const response = await fetch("http://localhost:3001/api/auth/signin", {
+      const response = await fetch(`${API_URL}/api/auth/signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
