@@ -12,7 +12,7 @@ RUN groupadd -r app && useradd -r -g app app || true
 
 # Install production dependencies only and clean apt cache to reduce image size
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates \
+    && apt-get install -y --no-install-recommends ca-certificates curl \
     && rm -rf /var/lib/apt/lists/*
 
 COPY package*.json ./
