@@ -13,9 +13,11 @@ import userRoutes from './routes/user.routes.js';
 
 const app = express();
 
+
+app.use(json());
+app.use(urlencoded({ extended: true }));
+
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
     res.json({ message: 'Welcome to the Movie App Backend!' });
