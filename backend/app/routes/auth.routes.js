@@ -12,7 +12,7 @@ const router = Router();
 // Signup Route
 router.post(
     "/signup",
-    [verifySignUp.checkDuplicateUsernameOrEmail, verifySignUp.checkPassowordStrength],
+    [verifySignUp.checkDuplicateUsernameOrEmail, verifySignUp.checkPassowordStrength, verifySignUp.checkEmailValidation],
     signup,
 );
 
@@ -22,7 +22,7 @@ router.post("/signin", signin);
 // Signup Route AI
 router.post(
     "/signup_ai",
-    [verifySignUp.checkDuplicateUsernameOrEmail, verifySignUp.checkPassowordStrength],
+    [verifySignUp.checkDuplicateUsernameOrEmail, verifySignUp.checkPassowordStrength, verifySignUp.checkEmailValidation],
     _signup,
 );
  

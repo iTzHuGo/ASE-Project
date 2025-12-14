@@ -14,8 +14,8 @@ const checkDuplicateUsernameOrEmail = async (req, res, next) => {
             return res.status(400).json({ message: "Username, Email, and Password are required!" });
         }
 
-        const userByUsername = await query("SELECT id FROM users WHERE username = $1", [username]);
-        const userByEmail = await query("SELECT id FROM users WHERE email = $1", [email]);
+        const userByUsername = await db.query("SELECT id FROM users WHERE username = $1", [username]);
+        const userByEmail = await db.query("SELECT id FROM users WHERE email = $1", [email]);
 
         if (userByUsername.rows.length > 0 || userByEmail.rows.length > 0) {
             return res.status(400).json({ message: "Failed! Username or Email is already in use!" });
@@ -27,6 +27,17 @@ const checkDuplicateUsernameOrEmail = async (req, res, next) => {
         console.error(err);
         res.status(500).json({ message: "Unable to validate username/email!" });
     }
+};
+
+const checkEmailValidation = async (req, res, next) => {
+ const email = req.body.email;
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+if (!emailRegex.test(email)) {
+return res.status(400).json({ message: "Invalid email format!" });
+ }
+ next();
 };
 
 const checkPassowordStrength = (req, res, next) => {
@@ -56,7 +67,8 @@ const checkRolesExisted = (req, res, next) => {
 
 const verifySignUp = {
     checkDuplicateUsernameOrEmail,
-    checkPassowordStrength
+    checkPassowordStrength,
+    checkEmailValidation
 };
 
 export default verifySignUp;

@@ -1,10 +1,10 @@
 // app/controllers/auth.AI.controller.js
 
-import { query as _query } from "../config/db.config.js";
-import { secret } from "../config/auth.config.js";
-import pkg from "jsonwebtoken";
-const { sign } = pkg;
-import { compare, hash } from "bcryptjs";
+
+import db from "../config/db.config.js";
+import authConfig from "../config/auth.config.js";
+import jwt from "jsonwebtoken";
+import * as bcrypt from 'bcryptjs';
 
 // ==========================================
 // FEATURE: SIGNUP (REGISTER)
@@ -43,7 +43,7 @@ export async function signup(req, res) {
     let role = 'user';
 
     // --- 4. Hash the password ---
-    const passwordHash = await hash(password, 10);
+    const passwordHash = await bcrypt.hash(password, 10);
 
     // --- 5. Insert new user ---
     const insertQuery = `
@@ -52,7 +52,7 @@ export async function signup(req, res) {
       RETURNING id, username, email, role;
     `;
 
-    const newUser = await _query(insertQuery, [
+    const newUser = await db.query(insertQuery, [
       username,
       email,
       passwordHash,
@@ -102,7 +102,7 @@ export async function signin(req, res) {
       WHERE email = $1
       LIMIT 1;
     `;
-    const result = await _query(query, [email]);
+    const result = await db.query(query, [email]);
 
     if (result.rows.length === 0) {
       return res.status(404).json({ message: 'User not found.' });
@@ -111,31 +111,32 @@ export async function signin(req, res) {
     const user = result.rows[0];
 
     // --- 3. Compare passwords ---
-    const isPasswordValid = await compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid credentials.' });
     }
 
     // --- 4. Generate JWT (expires in 24h) ---
-    const token = sign(
+    const token = jwt.sign(
       {
         id: user.id,
         username: user.username,
         role: user.role,
       },
-      secret,
+      authConfig.secret,
       { expiresIn: '24h' }
     );
+
 
     // --- 5. Send success response ---
     res.status(200).json({
         message: 'Authenticated successfully.',
-        token: jwtToken,
+        token: token,
         user: {
             id: user.id,
             username: user.username,
             email: user.email,
-            roles: [authority]
+            roles: user.role
         }
     });
 

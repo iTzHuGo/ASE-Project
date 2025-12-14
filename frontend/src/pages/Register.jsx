@@ -16,6 +16,7 @@ export default function Register() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [isAI, setIsAI] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -62,7 +63,11 @@ export default function Register() {
       }
 
       console.log("Registo OK:", data);
-      navigate("/login");
+      
+      setShowToast(true);
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000); // Espera 2 segundos antes de redirecionar
     } catch (err) {
       console.error("Erro detalhado:", err);
       setError(err.message || "Erro no registo.");
@@ -73,6 +78,14 @@ export default function Register() {
 
   return (
     <div className="auth-page">
+      {/* Toast Notification */}
+      {showToast && (
+        <div className="toast-notification">
+          <span style={{ fontSize: "1.2rem" }}>✨</span>
+          Conta criada com sucesso! A redirecionar...
+        </div>
+      )}
+
       <div className="auth-orb orb-gold" />
       <div className="auth-orb orb-purple" />
 

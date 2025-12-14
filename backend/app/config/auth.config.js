@@ -3,4 +3,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-export const secret = process.env.JWT_SECRET;
+export default {
+    secret: process.env.JWT_SECRET
+};

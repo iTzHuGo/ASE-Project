@@ -8,8 +8,7 @@ import cors from 'cors';
 import authRoutes from "./routes/auth.routes.js";
 import recommendationRoutes from './routes/recommendation.routes.js';
 import userRoutes from './routes/user.routes.js';
-
-
+import { json, urlencoded } from 'express';
 
 const app = express();
 

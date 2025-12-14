@@ -15,6 +15,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [isAI, setIsAI] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -53,7 +54,10 @@ export default function Login() {
       if (data.token) localStorage.setItem("token", data.token);
       login(data.user || { email: form.email });
       
-      navigate("/catalog");
+      setShowToast(true);
+      setTimeout(() => {
+        navigate("/catalog");
+      }, 1500);
     } catch (err) {
       setError(err.message || "Erro inesperado no login.");
     } finally {
@@ -63,6 +67,14 @@ export default function Login() {
 
   return (
     <div className="auth-page">
+      {/* Toast Notification */}
+      {showToast && (
+        <div className="toast-notification">
+          <span style={{ fontSize: "1.2rem" }}>✨</span>
+          Login efetuado com sucesso! A entrar...
+        </div>
+      )}
+
       {/* Orbes de fundo */}
       <div className="auth-orb orb-gold" />
       <div className="auth-orb orb-purple" />
