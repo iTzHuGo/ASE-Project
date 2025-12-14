@@ -9,26 +9,35 @@ import recommender
 
 app = Flask(__name__)
 
-@app.route('/recommend/movie/<movie_title>')
-def recommend_based_movie(movie_title):
+@app.route('/recommend/movie', methods=['GET'])
+def recommend_based_movie():
     """Recommed movie based on another movie"""
-
+    movie_title = request.args.get('title')
+    if not movie_title:
+        return jsonify({"error": "Movie title parameter ('title') is required."}), 400
+    
     top_n = request.args.get('top_n', default=5, type=int)
 
-    recommended_ids = recommender.similar_movies_recommendation(movie_title, top_n)
+    recommendation_data = recommender.similar_movies_recommendation(movie_title, top_n)
 
-    if recommended_ids is None:
+    if recommendation_data is None:
         return jsonify({
             "error": f"No movie found with title containing '{movie_title}'"
         }), 404
 
+    # Extract the matched title and IDs from the returned dictionary
+    matched_title = recommendation_data['matched_title']
+    recommended_ids = recommendation_data['recommended_ids']
+
     return jsonify({
-        "movie_title": movie_title,
+        # Use the title the model actually found
+        "movie_title_searched": movie_title,
+        "movie_title_matched": matched_title,
         "top_n_requested" : top_n,
         "recommended_movies_ids" : recommended_ids
     })
 
-@app.route('/recommend/user/<int:user_id>')
+@app.route('/recommend/user/<int:user_id>', methods=['GET'])
 def recommend_based_user(user_id):
     """Recommend movies based on a user's ratings fetched from Express."""
 

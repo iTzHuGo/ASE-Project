@@ -21,7 +21,7 @@ export const signup = async (req, res) => {
     try {
         const secretPassword = bcrypt.hashSync(req.body.password, 10);
         const query = 
-        `INSERT INTO users (username, email, password_hash, role)
+        `INSERT INTO users (username, email, password, role)
         VALUES ($1, $2, $3, $4) RETURNING id, username, email, role`;
 
         const data = [username, email, secretPassword, role];

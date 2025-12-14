@@ -86,6 +86,7 @@ def similar_movies_recommendation(title, top_n=5):
         print(f"No movie found with title containing '{title}'")
         return None
 
+    matched_movie_title = matching_movies['title'].iloc[0]
 
     genre_matrix = _build_genre_matrix()
     if genre_matrix is None:
@@ -106,7 +107,10 @@ def similar_movies_recommendation(title, top_n=5):
 
 
     recommended_ids = movies_df.iloc[movie_positions].index.tolist()
-    return recommended_ids
+    return {
+        "matched_title": matched_movie_title,
+        "recommended_ids": recommended_ids
+    }
 
 
 def user_based_recommendation(userID, userMoviesReviews, top_n=5):
@@ -213,7 +217,7 @@ def user_based_recommendation(userID, userMoviesReviews, top_n=5):
 
 
 def load_movie_database():
-    pages = 20
+    pages = 40
 
     url = "https://api.themoviedb.org/3/movie/popular"
 

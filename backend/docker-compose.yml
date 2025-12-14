@@ -37,6 +37,7 @@ services:
     environment:
       DB_HOST: db
       PORT: 3000
+      FLASK_SERVICE_URL: http://recommendation-service:8000
     healthcheck:
       test: [ "CMD-SHELL", "curl -f http://localhost:$PORT/api/health" ]
       interval: 5s

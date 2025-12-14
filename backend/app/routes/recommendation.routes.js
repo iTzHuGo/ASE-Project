@@ -17,13 +17,13 @@ router.get("/user/:userId", getRatedMoviesByUser);
 // GET /api/recommendation/movie?title=Inception
 // Uses QUERY PAREMETER for the movie title
 // Calls the flask api recommendation based on a movie
-router.get("/recommendation/movie/", getRecommendationsForMovie)
+router.get("/movie", getRecommendationsForMovie)
 
 
 // GET /api/recommendation/movie?title=Inception
 // Uses PATH VARIABLE for the user Id
 // Calls the flask api for recommendation based on user rated movies
-router.get("/recommendation/user/:userId", getRecommendationsForUser)
+router.get("/user/:userId", getRecommendationsForUser)
 
 
 export default router;

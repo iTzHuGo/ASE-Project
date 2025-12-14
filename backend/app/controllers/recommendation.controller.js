@@ -50,46 +50,37 @@ export const getRatedMoviesByUser = async (req, res) => {
 
 export const getRecommendationsForUser = async (req, res) => {
   const userId = Number(req.params.userId);
+  const top_n = Number(req.query.top_n) || 5;
   
   if (!Number.isInteger(userId)) {
     return res.status(400).json({ message: "User ID must be an integer." });
   }
 
   try {
-    const flaskEndpoint = `${FLASK_SERVICE_URL}/recommend/user`;
+    const flaskEndpoint = `${FLASK_SERVICE_URL}/recommend/user/${userId}`;
 
     const response = await axios.get(flaskEndpoint, {
-      params: {
-        user_id : userId
-      }
+      params: { top_n }
     });
 
-    res.status(200).json({
-      user_id: userId,
-      results: response.data
-    });
+    res.status(200).json(response.data);
 
   } catch (error){
-    console.error("Error calling Flask GET Endpoit:", error.message);
+    console.error("Error calling Flask GET Endpoint:", error.message);
 
     if (error.response) {
-        // Flask returned an HTTP error (e.g., 404, 400, 500)
         const { status, data } = error.response;
-        
-        return res.status(status).json({
-            error: "Flask service returned an error.",
-            details: data,
-            flask_status: status
-        });
+        return res.status(status).json(data);
     }
 
-    res.status(503).json({error: "Could not reach Flask service."})
+    res.status(503).json({ error: "Could not reach Flask service." });
   }
 };
 
 
 export const getRecommendationsForMovie = async (req, res) => {
   const movieTitle = req.query.title;
+  const top_n = Number(req.query.top_n) || 5;
   
   if (!movieTitle) {
     return res.status(400).json({ message: "Movie title must be provided." });
@@ -99,30 +90,22 @@ export const getRecommendationsForMovie = async (req, res) => {
     const flaskEndpoint = `${FLASK_SERVICE_URL}/recommend/movie`;
 
     const response = await axios.get(flaskEndpoint, {
-      params: {
-        movie_title : movieTitle
+      params: { 
+        title: movieTitle, // Axios handles encoding movieTitle and building the ?title=... string
+        top_n 
       }
     });
-
-    res.status(200).json({
-      movie_title: movieTitle,
-      results: response.data
-    });
+    
+    res.status(200).json(response.data);
 
   } catch (error){
-    console.error("Error calling Flask GET Endpoit:", error.message);
+    console.error("Error calling Flask GET Endpoint:", error.message);
 
     if (error.response) {
-        // Flask returned an HTTP error (e.g., 404, 400, 500)
         const { status, data } = error.response;
-        
-        return res.status(status).json({
-            error: "Flask service returned an error.",
-            details: data,
-            flask_status: status
-        });
+        return res.status(status).json(data);
     }
 
-    res.status(503).json({error: "Could not reach Flask service."})
+    res.status(503).json({ error: "Could not reach Flask service." });
   }
 };
