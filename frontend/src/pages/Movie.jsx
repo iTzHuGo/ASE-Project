@@ -19,6 +19,8 @@ export default function Movie() {
   const [toastMessage, setToastMessage] = useState("");
 
   useEffect(() => {
+    setRating(0); // Reset ao rating quando muda de filme
+
     fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&include_adult=false`)
       .then((r) => r.json())
       .then((data) => setMovie(data));
@@ -26,6 +28,21 @@ export default function Movie() {
     fetch(`https://api.themoviedb.org/3/movie/${id}/similar?api_key=${API_KEY}&include_adult=false`)
       .then((r) => r.json())
       .then((data) => setSimilar(Array.isArray(data.results) ? data.results : []));
+
+    // Verificar se o utilizador já avaliou este filme
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetch(`${API_URL}/api/user/rate/${id}`, {
+        headers: { "x-access-token": token }
+      })
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data && data.rating) {
+          setRating(data.rating);
+        }
+      })
+      .catch(err => console.error("Erro ao carregar rating:", err));
+    }
   }, [id]);
 
   const handleRate = async (value) => {
