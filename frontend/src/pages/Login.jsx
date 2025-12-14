@@ -14,6 +14,7 @@ export default function Login() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isAI, setIsAI] = useState(false);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -27,7 +28,8 @@ export default function Login() {
     try {
       setLoading(true);
       
-      const response = await fetch(`${API_URL}/api/auth/signin`, {
+      const endpoint = isAI ? "/api/auth/signin_ai" : "/api/auth/signin";
+      const response = await fetch(`${API_URL}${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -77,7 +79,32 @@ export default function Login() {
 
         {/* Formulário à Direita */}
         <div className="auth-card">
-          <h2 className="auth-title">Login</h2>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+            <h2 className="auth-title" style={{ marginBottom: 0 }}>Login {isAI ? "(AI)" : ""}</h2>
+            
+            {/* Slider Toggle */}
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <label style={{ position: "relative", display: "inline-block", width: "46px", height: "22px" }}>
+                <input 
+                  type="checkbox" 
+                  checked={isAI} 
+                  onChange={() => setIsAI(!isAI)} 
+                  style={{ opacity: 0, width: 0, height: 0 }}
+                />
+                <span style={{ 
+                  position: "absolute", cursor: "pointer", top: 0, left: 0, right: 0, bottom: 0, 
+                  backgroundColor: isAI ? "#9333ea" : "#4b5563", transition: ".3s", borderRadius: "34px" 
+                }}></span>
+                <span style={{ 
+                  position: "absolute", content: '""', height: "16px", width: "16px", left: "3px", bottom: "3px", 
+                  backgroundColor: "white", transition: ".3s", borderRadius: "50%",
+                  transform: isAI ? "translateX(24px)" : "translateX(0)"
+                }}></span>
+              </label>
+              <span style={{ color: isAI ? "white" : "#888", fontWeight: isAI ? "bold" : "normal", fontSize: "0.9rem" }}>AI</span>
+            </div>
+          </div>
+
           <p className="auth-subtitle">Insere os teus dados para continuar.</p>
 
           <form className="auth-form" onSubmit={handleSubmit}>
