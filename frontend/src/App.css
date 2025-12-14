@@ -1,0 +1,442 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+/* =========================
+   VARIÁVEIS GLOBAIS (TEMA)
+   ========================= */
+:root {
+  --bg-color: #0f172a;       /* Fundo principal escuro (Dark Slate) */
+  --accent: #fbbf24;         /* Dourado/Amarelo Cinema */
+  --accent-strong: #d97706;  /* Dourado mais escuro para hover */
+  --text-muted: #94a3b8;     /* Cinzento claro para texto secundário */
+  --border-color: rgba(255, 255, 255, 0.1);
+  --input-bg: rgba(2, 6, 23, 0.5); /* Fundo dos inputs muito escuro */
+  --radius-lg: 16px;
+}
+
+/* =========================
+   RESET GLOBAL
+   ========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: #fff; /* TEXTO BRANCO EM TODO O SITE */
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+/* =========================
+   ANIMAÇÕES & ORBES
+   ========================= */
+@keyframes float {
+  0% { transform: translate(0px, 0px); }
+  50% { transform: translate(20px, -20px); }
+  100% { transform: translate(0px, 0px); }
+}
+
+.auth-orb, .landing-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px); /* Blur forte para parecer luz */
+  opacity: 0.6;
+  z-index: 0;
+  pointer-events: none;
+  animation: float 10s ease-in-out infinite;
+}
+
+/* Cores e Posições dos Orbes */
+.orb-gold, .landing-orb--gold { 
+  background: var(--accent); width: 300px; height: 300px; top: -50px; right: -50px; 
+}
+.orb-purple, .landing-orb--purple { 
+  background: #6366f1; width: 250px; height: 250px; bottom: -50px; left: -50px; 
+}
+
+/* =========================
+   ESTRUTURA DAS PÁGINAS
+   ========================= */
+
+/* Classe partilhada para centrar e esconder scroll */
+.auth-page, .landing-page {
+  width: 100%;
+  background-color: var(--bg-color);
+  color: #fff;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden; /* IMPORTANTE: Esconde a barra horizontal extra */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+/* Contentor interno (Grid de 2 colunas) */
+.auth-inner, .landing-inner {
+  position: relative;
+  z-index: 1; /* Garante que o texto fica acima dos orbes */
+  width: 100%;
+  max-width: 1000px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+/* =========================
+   COMPONENTES DE AUTH (Login/Register)
+   ========================= */
+
+/* Texto à Esquerda (Hero) */
+.auth-hero {
+  text-align: left;
+}
+.auth-kicker {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.auth-hero-title {
+  font-size: 3rem;
+  line-height: 1.1;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+.auth-hero-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Cartão à Direita (Formulário) */
+.auth-card {
+  background: rgba(15, 23, 42, 0.6); /* Escuro e translúcido */
+  backdrop-filter: blur(12px);       /* Efeito vidro fosco */
+  padding: 2.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.auth-title { font-size: 1.8rem; margin-bottom: 0.5rem; color: #fff; }
+.auth-subtitle { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem; }
+
+/* Inputs e Botões */
+.auth-form { display: flex; flex-direction: column; gap: 1.2rem; }
+.auth-field { display: flex; flex-direction: column; gap: 0.5rem; text-align: left; }
+.auth-label { font-size: 0.85rem; color: var(--text-muted); margin-left: 4px; }
+
+.auth-input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: 0.3s;
+}
+
+.auth-input:focus {
+  border-color: var(--accent);
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.auth-btn {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 0.9rem;
+  background-color: var(--accent);
+  color: #000;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  transition: transform 0.2s, background-color 0.2s;
+}
+.auth-btn:hover {
+  background-color: var(--accent-strong);
+  transform: translateY(-2px);
+}
+.auth-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+.auth-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+.auth-footer a { color: var(--accent); font-weight: 600; }
+.auth-footer a:hover { text-decoration: underline; }
+
+.auth-error {
+  background: rgba(220, 38, 38, 0.2);
+  color: #fca5a5;
+  padding: 0.8rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  border: 1px solid rgba(220, 38, 38, 0.3);
+}
+
+/* =========================
+   LANDING PAGE (Ajustes Específicos)
+   ========================= */
+.landing-hero { display: flex; flex-direction: column; gap: 1.5rem; }
+.landing-title { font-size: 3.5rem; line-height: 1.1; font-weight: 800; color: #fff; }
+.landing-title span { color: var(--accent); }
+.landing-subtitle { font-size: 1.1rem; color: var(--text-muted); max-width: 500px; }
+
+.landing-actions { display: flex; gap: 1rem; }
+.landing-btn-primary { 
+  background: var(--accent); color: #000; padding: 0.8rem 2rem; border-radius: 99px; font-weight: 700; border: none; cursor: pointer; text-decoration: none; transition: transform 0.2s; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.landing-btn-primary:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+.landing-btn-ghost { 
+  background: transparent; color: #fff; padding: 0.8rem 2rem; border-radius: 99px; border: 1px solid var(--border-color); font-weight: 600; cursor: pointer; text-decoration: none; transition: background 0.2s, transform 0.2s; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.landing-btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Botão Especial para AI */
+.landing-btn-ai {
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  color: #fff;
+  padding: 0.8rem 2rem;
+  border-radius: 99px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.landing-btn-ai:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+}
+
+/* Grid de Filmes na Landing */
+.landing-panel {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(12px);
+  padding: 1.5rem;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+}
+.landing-mini-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem;
+}
+.landing-movie-card {
+  aspect-ratio: 2/3; border-radius: 8px; background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* =========================
+   PÁGINAS DE CATÁLOGO
+   ========================= */
+.page-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.catalog-header {
+  margin-bottom: 2rem;
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 800;
+}
+
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2rem;
+}
+
+.movie-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s;
+  border: 1px solid var(--border-color);
+}
+.movie-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--accent);
+}
+.movie-card img {
+  width: 100%;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+}
+.movie-info { padding: 1rem; }
+.movie-title { font-size: 1rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* =========================
+   BOTÃO DE PERFIL FLUTUANTE
+   ========================= */
+.profile-floating-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 8px 16px 8px 8px;
+  border-radius: 99px;
+  border: 1px solid var(--border-color);
+  text-decoration: none;
+  transition: transform 0.2s, border-color 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.profile-floating-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+
+.profile-avatar {
+  width: 32px;
+  height: 32px;
+  background: var(--accent);
+  color: #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.profile-label {
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* =========================
+   PERFIL (DASHBOARD)
+   ========================= */
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 2rem;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+}
+
+.profile-welcome h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+.profile-welcome p { color: var(--text-muted); }
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid var(--accent);
+  padding-left: 1rem;
+  margin-top: 3rem;
+}
+
+.user-rating-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--accent);
+  color: #000;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* =========================
+   MODAL (POPUP)
+   ========================= */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px);
+  display: flex; justify-content: center; align-items: center;
+  z-index: 2000; animation: fadeIn 0.2s ease;
+}
+
+.modal-content {
+  background: #0f172a; padding: 2rem; border-radius: 20px;
+  border: 1px solid var(--border-color); width: 100%; max-width: 500px;
+  position: relative; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* =========================
+   RESPONSIVIDADE (Telemóvel)
+   ========================= */
+@media (max-width: 900px) {
+  .auth-inner, .landing-inner {
+    grid-template-columns: 1fr; /* Passa a 1 coluna */
+    text-align: center;
+    gap: 2rem;
+  }
+  
+  .auth-hero, .auth-field { text-align: center; }
+  .auth-field { text-align: left; } /* Inputs mantêm-se à esquerda para escrever */
+  
+  .landing-actions { justify-content: center; }
+  .landing-title, .auth-hero-title { font-size: 2.5rem; }
+  
+  /* Esconde um orbe em ecrãs pequenos para não poluir */
+  .orb-purple { display: none; }
+}
+
+/* =========================
+   TOAST NOTIFICATION (POP-UP)
+   ========================= */
+.toast-notification {
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--accent);
+  color: #fff;
+  padding: 12px 28px;
+  border-radius: 50px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: slideDownToast 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+}
+
+@keyframes slideDownToast {
+  from { transform: translate(-50%, -100px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}
