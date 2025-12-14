@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS movies (
     duration_min INT,
     synopsis TEXT,
     poster_path VARCHAR(255),
-    genre VARCHAR(100)
+    genre_ids INT[]
 );
 
 -- 3. Ratings Table
@@ -55,6 +55,13 @@ CREATE TABLE IF NOT EXISTS list_movies (
     FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE
 );
 
+-- 6. Genres_names Table
+CREATE TABLE IF NOT EXISTS genre_names (
+    id INT PRIMARY KEY,      -- TMDB Genre ID
+    name VARCHAR(100) NOT NULL, -- Human-readable name
+    UNIQUE(id)
+);
+
 
 -- TRIGGERS:
 -- Function to create default lists automatically
@@ -74,17 +81,30 @@ EXECUTE FUNCTION create_default_user_lists();
 
 -- ADD DATA:
 
--- 1. Insert Movies
-INSERT INTO movies (tmdb_id, title, release_date, duration_min, synopsis, genre) VALUES 
-(27205, 'Inception', '2010-07-16', 148, 'A thief who steals corporate secrets...', 'Sci-Fi'),
-(603, 'The Matrix', '1999-03-31', 136, 'A computer hacker learns from mysterious rebels...', 'Action'),
-(238, 'The Godfather', '1972-03-14', 175, 'Spanning the years 1945 to 1955...', 'Crime');
+INSERT INTO genre_names (id, name) VALUES 
+(28, 'Action'),
+(12, 'Adventure'),
+(16, 'Animation'),
+(35, 'Comedy'),
+(80, 'Crime'),
+(99, 'Documentary'),
+(18, 'Drama'),
+(14, 'Fantasy'),
+(27, 'Horror'),
+(878, 'Science Fiction'),
+(53, 'Thriller');
 
--- 2. Insert Users 
+-- 1. Insert Movies
+INSERT INTO movies (tmdb_id, title, release_date, duration_min, synopsis, genre_ids) VALUES 
+(27205, 'Inception', '2010-07-16', 148, 'A thief who steals corporate secrets...', '{878, 28, 12}'),
+(603, 'The Matrix', '1999-03-31', 136, 'A computer hacker learns from mysterious rebels...', '{28, 878}'),
+(238, 'The Godfather', '1972-03-14', 175, 'Spanning the years 1945 to 1955...', '{80, 18}');
+
+-- 2. Insert Users with 'password' as the password
 INSERT INTO users (username, email, password, role) VALUES 
-('Alice', 'alice@gmail.com', 'hashed_secret', 'user'),
-('admin', 'admin@gmail.com', 'tacobell', 'admin'),
-('Bob', 'bob@gmail.com', 'hashed_secret', 'user');
+('Alice', 'alice@gmail.com', '$2b$10$f3WAfEyfuHTDaJPiHs1Th.N.3heOGAFDYt.lHKFlxV0mCnO26kCgG', 'user'),
+('admin', 'admin@gmail.com', '$2b$10$f3WAfEyfuHTDaJPiHs1Th.N.3heOGAFDYt.lHKFlxV0mCnO26kCgG', 'admin'),
+('Bob', 'bob@gmail.com', '$2b$10$f3WAfEyfuHTDaJPiHs1Th.N.3heOGAFDYt.lHKFlxV0mCnO26kCgG', 'user');
 
 
 -- 3. Insert Rating

@@ -1,10 +1,9 @@
 // app/controllers/auth.controller.js
 
-import { query as _query } from "../config/db.config.js";
-import { secret } from "../config/auth.config.js";
-import pkg from "jsonwebtoken";
-const { sign } = pkg;
-import { hashSync, compareSync } from "bcryptjs";
+import db from "../config/db.config.js";
+import authConfig from "../config/auth.config.js";
+import jwt from "jsonwebtoken";
+import * as bcrypt from 'bcryptjs';
 
 // ==========================================
 // FEATURE: SIGNUP (REGISTER)
@@ -13,14 +12,14 @@ import { hashSync, compareSync } from "bcryptjs";
 // DESCRIPTION: Controller to handle user signup requests, including
 //              validation, password hashing, and storing user data in the database.
 // ==========================================
-export async function signup(req, res) {
+export const signup = async (req, res) => {
     const username = req.body.username;
     const email = req.body.email;
     
     const role = req.body.roles || "user";
 
     try {
-        const secretPassword = hashSync(req.body.password, 10);
+        const secretPassword = bcrypt.hashSync(req.body.password, 10);
         const query = 
         `INSERT INTO users (username, email, password, role)
         VALUES ($1, $2, $3, $4) RETURNING id, username, email, role`;
@@ -53,7 +52,7 @@ export async function signup(req, res) {
 // DESCRIPTION: Controller to handle user signin requests, including
 //              validation, password comparison, and JWT token generation.
 // ==========================================
-export async function signin(req, res) {
+export const signin = async (req, res) => {
     const email = req.body.email;
     const pass = req.body.password;
 
@@ -87,12 +86,12 @@ export async function signin(req, res) {
 
         res.status(200).json({
             message: 'Authenticated successfully.',
-            user_details: {
+            token: jwtToken,
+            user: {
                 id: user.id,
                 username: user.username,
                 email: user.email,
-                roles: [authority],
-                accessToken: jwtToken
+                roles: [authority]
             }
         });
     } catch (error) {

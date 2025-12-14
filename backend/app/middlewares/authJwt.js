@@ -1,9 +1,8 @@
 // app/middleware/authJwt.js
 
-import pkg from 'jsonwebtoken';
-const { verify } = pkg;
-import { query as _query } from "../config/db.config.js";
-import { secret } from "../config/auth.config.js";
+import jwt from 'jsonwebtoken';
+import db from "../config/db.config.js";
+import config from "../config/auth.config.js";
 
 // 1. Verify JWT Token
 const verifyToken = (req, res, next) => {

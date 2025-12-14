@@ -1,6 +1,6 @@
 // app/middleware/verifySignUp.js
 
-import { query } from "../config/db.config.js";
+import db from "../config/db.config.js";
 
 const ROLES = ["user", "admin"];
 

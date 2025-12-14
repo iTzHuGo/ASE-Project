@@ -1,9 +1,6 @@
 // app/config/db.config.js
-import pg from 'pg';
-const { Pool } = pg;
-
-import dotenv from 'dotenv';
-dotenv.config();
+import { Pool } from 'pg';
+import 'dotenv/config.js';
 
 const pool = new Pool({
     user: process.env.POSTGRES_USER ,
@@ -13,4 +10,6 @@ const pool = new Pool({
     port: 5432,
 });
 
-export function query(text, params) { return pool.query(text, params); }
+export default {
+    query: (text, params) => pool.query(text, params),
+};

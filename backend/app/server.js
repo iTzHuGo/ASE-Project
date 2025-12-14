@@ -1,9 +1,13 @@
 // app/server.js
+import db from './config/db.config.js';
 
-import express, { json, urlencoded } from 'express';
+import express from 'express';
 import cors from 'cors';
-import { query } from './config/db.config.js';
+
+
 import authRoutes from "./routes/auth.routes.js";
+import recommendationRoutes from './routes/recommendation.routes.js';
+
 
 
 const app = express();
@@ -19,9 +23,9 @@ app.get('/', (req, res) => {
 });
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
+app.get('/api/health',  async (req, res) => {
     try {
-        const result = query('SELECT NOW()');
+        const result = await db.query('SELECT NOW()');
         res.json({ status: 'BACKEND is healthy', db_time: result.rows[0].now });
     } catch (err) {
         console.error(err);
@@ -31,6 +35,8 @@ app.get('/api/health', (req, res) => {
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/recommendation', recommendationRoutes);
+
 
 
 // Set port, listen for requests

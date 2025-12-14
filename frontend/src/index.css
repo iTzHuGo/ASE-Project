@@ -1,0 +1,48 @@
+:root {
+  /* CORES GLOBAIS (Force Dark Mode) */
+  --bg-main: #020617;        /* Fundo principal quase preto */
+  --bg-secondary: #0f172a;
+  --accent: #facc15;         /* Amarelo Pipoca */
+  --accent-strong: #fbbf24;
+  --text-main: #f3f4f6;      /* Texto claro */
+  --text-muted: #9ca3af;     /* Texto cinzento */
+  
+  --card-bg: rgba(30, 41, 59, 0.7); /* Fundo dos cartões */
+  --border-color: rgba(255, 255, 255, 0.1);
+  --input-bg: rgba(0, 0, 0, 0.3);
+  
+  --radius-lg: 16px;
+}
+
+/* RESET TOTAL */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden; /* MATA A BARRA HORIZONTAL NO BODY */
+  height: 100%;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  /* Fundo fixo para não cortar ao fazer scroll */
+  background: radial-gradient(circle at top, #1e293b 0, #020617 50%, #000 100%);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a { text-decoration: none; transition: 0.3s; color: inherit; }
+button { font-family: inherit; cursor: pointer; }
