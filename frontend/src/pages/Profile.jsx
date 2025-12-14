@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "../App.css";
 import { useAuth } from "../hooks/AuthContext";
 
@@ -13,6 +13,8 @@ export default function Profile() {
   const [watchedMovies, setWatchedMovies] = useState([]);
   const [recommendedMovies, setRecommendedMovies] = useState([]);
   const [watchlist, setWatchlist] = useState([]);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   useEffect(() => {
     if (!authUser) {
@@ -84,11 +86,40 @@ export default function Profile() {
     setIsEditing(false); // Fecha o modal
   };
 
+  const handleRemoveFromWatchlist = async (movieId) => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      const response = await fetch(`${API_URL}/api/user/watchlist/${movieId}`, {
+        method: "DELETE",
+        headers: { "x-access-token": token }
+      });
+
+      if (response.ok) {
+        setWatchlist((prev) => prev.filter((m) => m.id !== movieId));
+        setToastMessage("Filme removido da Watchlist!");
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+      }
+    } catch (error) {
+      console.error("Erro ao remover da watchlist:", error);
+    }
+  };
+
   const firstName = user?.name ? user.name.split(" ")[0] : "Utilizador";
 
   return (
     <div className="page-container">
       
+      {/* Toast Notification */}
+      {showToast && (
+        <div className="toast-notification">
+          <span style={{ fontSize: "1.2rem" }}>✨</span>
+          {toastMessage}
+        </div>
+      )}
+
       {/* CABEÇALHO DO PERFIL */}
       <header className="profile-header">
         <div className="profile-welcome">
@@ -110,12 +141,14 @@ export default function Profile() {
         <h2 className="section-title">Recomendados para ti</h2>
         <div className="catalog-grid">
           {recommendedMovies.map(m => (
-            <div key={m.id} className="movie-card">
-              <img src={`https://image.tmdb.org/t/p/w500${m.poster_path}`} alt={m.title} />
-              <div className="movie-info">
-                <h3 className="movie-title">{m.title}</h3>
+            <Link key={m.id} to={`/movie/${m.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+              <div className="movie-card">
+                <img src={`https://image.tmdb.org/t/p/w500${m.poster_path}`} alt={m.title} />
+                <div className="movie-info">
+                  <h3 className="movie-title">{m.title}</h3>
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
@@ -125,12 +158,50 @@ export default function Profile() {
         <h2 className="section-title">Minha Watchlist</h2>
         <div className="catalog-grid">
           {watchlist.length > 0 ? watchlist.map(m => (
-            <div key={m.id} className="movie-card">
+            <Link key={m.id} to={`/movie/${m.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+            <div className="movie-card" style={{ position: "relative" }}>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleRemoveFromWatchlist(m.id);
+                }}
+                style={{
+                  position: "absolute",
+                  top: "10px",
+                  right: "10px",
+                  background: "rgba(0, 0, 0, 0.7)",
+                  color: "white",
+                  border: "1px solid rgba(255,255,255,0.3)",
+                  borderRadius: "50%",
+                  width: "30px",
+                  height: "30px",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  zIndex: 10,
+                  fontSize: "14px",
+                  transition: "all 0.2s"
+                }}
+                title="Remover da Watchlist"
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#ef4444";
+                  e.currentTarget.style.borderColor = "#ef4444";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "rgba(0, 0, 0, 0.7)";
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)";
+                }}
+              >
+                ✕
+              </button>
               <img src={`https://image.tmdb.org/t/p/w500${m.poster_path}`} alt={m.title} />
               <div className="movie-info">
                 <h3 className="movie-title">{m.title}</h3>
               </div>
             </div>
+            </Link>
           )) : <p style={{ color: "var(--text-muted)" }}>Ainda não adicionaste filmes à watchlist.</p>}
         </div>
       </section>
@@ -140,13 +211,15 @@ export default function Profile() {
         <h2 className="section-title">Vistos Recentemente</h2>
         <div className="catalog-grid">
           {watchedMovies.map(m => (
-            <div key={m.id} className="movie-card">
-              <div className="user-rating-badge">Teu: {m.myRating}</div>
-              <img src={`https://image.tmdb.org/t/p/w500${m.poster_path}`} alt={m.title} />
-              <div className="movie-info">
-                <h3 className="movie-title">{m.title}</h3>
+            <Link key={m.id} to={`/movie/${m.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+              <div className="movie-card">
+                <div className="user-rating-badge">Teu: {m.myRating}</div>
+                <img src={`https://image.tmdb.org/t/p/w500${m.poster_path}`} alt={m.title} />
+                <div className="movie-info">
+                  <h3 className="movie-title">{m.title}</h3>
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
