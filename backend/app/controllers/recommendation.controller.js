@@ -36,7 +36,7 @@ export const getRatedMoviesByUser = async (req, res) => {
             WHERE r.user_id = $1;
         `;
 
-        const { rows } = await db(sql, [userId]);
+        const { rows } = await db.query(sql, [userId]);
         return res.status(200).json({
         user_id: userId,
         ratings: rows,
@@ -57,11 +57,30 @@ export const getRecommendationsForUser = async (req, res) => {
   }
 
   try {
+
+    // FAZER QUERY DOS RATINGS DO USER
+    const sql = `
+            SELECT 
+                r.rating_value AS rating, 
+                m.tmdb_id,
+                m.genre_ids
+            FROM ratings r
+            JOIN movies m ON m.id = r.movie_id
+            WHERE r.user_id = $1;
+        `;
+    const { rows: userRatings } = await db.query(sql, [userId]);
+
+    if (userRatings.length() == 0){
+      return res.status(404).json({ message: `User ${userId} has no ratings.` });
+    }
+
+    // FAZER POST AOS RATINGS PARA O FLASK
     const flaskEndpoint = `${FLASK_SERVICE_URL}/recommend/user/${userId}`;
 
-    const response = await axios.get(flaskEndpoint, {
-      params: { top_n }
-    });
+    const response = await axios.post(
+      `${flaskEndpoint}?top_n=${top_n}`,
+      { ratings: userRatings}
+    );
 
     res.status(200).json(response.data);
 
