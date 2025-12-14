@@ -7,6 +7,9 @@ import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import ProfileButton from "./components/ProfileButton";
 import { AuthProvider } from "./hooks/AuthContext";
+import Movie from "./pages/Movie";
+import CatalogJordao from "./pages/CatalogJordao";
+import CatalogAIJordao from "./pages/CatalogAIJordao";
 
 export default function App() {
   return (
@@ -19,6 +22,9 @@ export default function App() {
         <Route path="/catalog" element={<Catalog />} />
         <Route path="/catalogAI" element={<CatalogAI/>} />
         <Route path="/profile" element={<Profile />} />
+				<Route path="/movie/:id" element={<Movie/>} />
+        <Route path="/catalogjordao" element={<CatalogJordao />} />
+        <Route path="/catalogAIjordao" element={<CatalogAIJordao/>} />
       </Routes>
     </AuthProvider>
   );
