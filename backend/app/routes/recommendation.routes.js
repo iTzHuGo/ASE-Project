@@ -1,16 +1,10 @@
 // app/routes/recommendation.routes.js
 import express from "express";
-import { getRatedMoviesByUser, getRecommendationsForMovie, getRecommendationsForUser } from "../controllers/recommendation.controller.js";
+import {getRecommendationsForMovie, getRecommendationsForUser } from "../controllers/recommendation.controller.js";
 
 
 const router = express.Router();
  
-// ---- USER RATINGS ROUTE
-// this is a helper rout for flask to get the movies rated by a USER
-// its simple this way instead of sending them on the recomendation route for user ID
-//router.get("/user/:userId", getRatedMoviesByUser);
-
-
 // ---- RECOMENDATION ROUTES ----
 
 
