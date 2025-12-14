@@ -3,6 +3,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import json
 import os
 import requests
+import re
 
 
 global movies_df
@@ -13,7 +14,25 @@ movies_df = None
 genres_df = None
 
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
-EXPRESS_URL = os.getenv("EXPRESS_URL", "").rstrip("/")
+EXPRESS_URL = os.getenv("EXPRESS_URL")
+
+
+def _build_genre_matrix():
+    if movies_df is None or len(movies_df) == 0:
+        return None
+
+    genre_matrix = (
+        pd.get_dummies(movies_df['genre_ids'].apply(pd.Series).stack())
+        .groupby(level=0)
+        .sum()
+        .astype(int)
+    )
+
+    if genres_df is None or len(genres_df) == 0 or 'id' not in genres_df.columns:
+        return genre_matrix
+
+    all_genre_ids = genres_df['id'].tolist()
+    return genre_matrix.reindex(columns=all_genre_ids, fill_value=0).astype(int)
 
 
 def get_user_movie_ratings_from_express(user_id: int):
@@ -68,12 +87,9 @@ def similar_movies_recommendation(title, top_n=5):
         return None
 
 
-    genre_matrix = (
-        pd.get_dummies(movies_df['genre_ids'].apply(pd.Series).stack())
-        .groupby(level=0)
-        .sum()
-        .astype(int)
-    )
+    genre_matrix = _build_genre_matrix()
+    if genre_matrix is None:
+        return None
 
     similarities_genres = cosine_similarity(genre_matrix)
 
@@ -109,7 +125,7 @@ def user_based_recommendation(userID, userMoviesReviews, top_n=5):
     :param top_n: Default = 5. Escolhe quantos filmes sugerir ao utilizador
 
     autor: miguel pereira & ai assitent
-    metodo: ai-assited
+    metodo: ai-assisted
     descricao: esta feature baseia-se na de total autoria minha, foi utilizado assistencia de AI apenas para acelerar o processo,
     visto que estava ele todo feito, já
     '''
@@ -151,12 +167,9 @@ def user_based_recommendation(userID, userMoviesReviews, top_n=5):
     print(f"Genre scores: {dict(sorted_genres[:3])}")
 
     # Criar matriz de géneros para todos os filmes
-    genre_matrix = (
-        pd.get_dummies(movies_df['genre_ids'].apply(pd.Series).stack())
-        .groupby(level=0)
-        .sum()
-        .astype(int)
-    )
+    genre_matrix = _build_genre_matrix()
+    if genre_matrix is None:
+        return []
 
     # Criar pseudo-filme com os top 3 géneros
     # Inicializar com zeros para todos os géneros
@@ -200,10 +213,9 @@ def user_based_recommendation(userID, userMoviesReviews, top_n=5):
 
 
 def load_movie_database():
-
     pages = 20
 
-    url = "https://api.themoviedb.org/3/trending/movie/day"
+    url = "https://api.themoviedb.org/3/movie/popular"
 
     headers = {
         "accept": "application/json",
@@ -221,7 +233,7 @@ def load_movie_database():
         )
         r.raise_for_status()
         all_results.extend(r.json().get("results",[]))
-
+        
     return pd.DataFrame(all_results)[["id", "title", "genre_ids"]].set_index("id")
 
 
