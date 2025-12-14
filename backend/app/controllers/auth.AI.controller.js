@@ -127,15 +127,15 @@ exports.signin = async (req, res) => {
     );
 
     // --- 5. Send success response ---
-    return res.status(200).json({
-      message: 'Authenticated successfully.',
-      token,
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        role: user.role,
-      },
+    res.status(200).json({
+        message: 'Authenticated successfully.',
+        token: jwtToken,
+        user: {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            roles: [authority]
+        }
     });
 
   } catch (error) {
