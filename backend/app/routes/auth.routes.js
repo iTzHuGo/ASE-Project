@@ -1,11 +1,10 @@
 // app/routes/auth.routes.js
 
-// 1. Mudar IMPORT para REQUIRE
-const express = require("express");
+import express from "express";
 
-const controller = require("../controllers/auth.controller.js");
+import * as controller from "../controllers/auth.controller.js";
 
-const { verifySignUp } = require("../middlewares");
+import { verifySignUp } from "../middlewares/index.js";
 
 const router = express.Router();
  
@@ -19,4 +18,4 @@ router.post(
 // Signin Route
 router.post("/signin", controller.signin);
  
-module.exports = router;
+export default router;

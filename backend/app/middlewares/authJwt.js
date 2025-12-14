@@ -1,8 +1,8 @@
 // app/middleware/authJwt.js
 
-const jwt = require('jsonwebtoken');
-const db = require("../config/db.config.js");
-const config = require("../config/auth.config.js");
+import jwt from 'jsonwebtoken';
+import db from "../config/db.config.js";
+import config from "../config/auth.config.js";
 
 // 1. Verify JWT Token
 const verifyToken = (req, res, next) => {
@@ -54,4 +54,4 @@ const authJwt = {
     isAdmin
 };
 
-module.exports = authJwt;
+export default authJwt;

@@ -1,14 +1,6 @@
 // app/controllers/recommendation.controller.js
 
-const db = require("../config/db.config.js");
-const _query = db.query;
-// Importação dinâmica para node-fetch (compatível com CJS)
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-
-const TMDB_API_URL = 'https://api.themoviedb.org/3';
-const TMDB_API_KEY = process.env.TMDB_API_KEY;
-
-
+import db from "../config/db.config.js";
 
 exports.recommendBasedOnMovie = async (req, res) => {
     const title = req.body.title;
@@ -57,6 +49,7 @@ export const getRatedMoviesByUser = async (req, res) => {
             WHERE r.user_id = $1;
         `;
 
+        const { rows } = await db(sql, [userId]);
         const results = await _query(sql, [userId]);
         const dbRatings = results.rows;
 
