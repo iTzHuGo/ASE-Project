@@ -11,7 +11,7 @@ export const getRatedMoviesByUser = async (req, res) => {
     {
   "user_id": 1,
   "ratings": [
-    { "tmdb_id": 27205, "rating": 5 }
+    { "tmdb_id": 27205, "rating": 5, "genre_ids": [878, 28, 12] }
   ],
   "count": 1
 }
@@ -27,7 +27,10 @@ export const getRatedMoviesByUser = async (req, res) => {
 
         // QUERY A DB PARA OBTER OS FILMES AVALIADOS PELO USER
         const sql = `
-           SELECT r.rating_value AS rating, m.tmdb_id
+           SELECT 
+              r.rating_value AS rating, 
+              m.tmdb_id,
+              m.genre_ids
             FROM ratings r
             JOIN movies m ON m.id = r.movie_id
             WHERE r.user_id = $1;
