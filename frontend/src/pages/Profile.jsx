@@ -7,6 +7,7 @@ export default function Profile() {
   const navigate = useNavigate();
   const { user: authUser, logout, login: saveUser } = useAuth();
   const [user, setUser] = useState({ name: "", email: "" });
+  const API_URL = import.meta.env.VITE_API_URL;
   const [isEditing, setIsEditing] = useState(false); // Controla o Pop-up
   
   const [watchedMovies, setWatchedMovies] = useState([]);
@@ -22,22 +23,38 @@ export default function Profile() {
     // Carregar filmes da API para simular dados
     const API_KEY = import.meta.env.VITE_TMDB_KEY;
     
-    // 1. Simular "Histórico" (Usamos Top Rated)
-    fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}&page=1`)
-      .then(r => r.json())
-      .then(data => {
-        // Adicionar ratings falsos do utilizador
-        const mocked = data.results.slice(0, 4).map(m => ({
-          ...m,
-          myRating: (Math.random() * 2 + 8).toFixed(1) // Rating entre 8.0 e 10.0
-        }));
-        setWatchedMovies(mocked);
-      });
+    // 1. Carregar Histórico Real do Backend
+    if (authUser?.id) {
+      fetch(`${API_URL}/api/recommendation/user/${authUser.id}?top_n=5`)
+        .then(res => {
+          if (!res.ok) throw new Error("Erro ao buscar histórico");
+          return res.json();
+        })
+        .then(async (data) => {
+          console.log(data);
+          // data.ratings contém { tmdb_id, rating }
+          // Precisamos de buscar os detalhes de cada filme ao TMDB para mostrar o poster/título
+          const promises = data.ratings.map(async (item) => {
+            const tmdbRes = await fetch(`https://api.themoviedb.org/3/movie/${item.tmdb_id}?api_key=${API_KEY}`);
+            const tmdbData = await tmdbRes.json();
+            return { ...tmdbData, myRating: item.rating };
+          });
+          
+          const movies = await Promise.all(promises);
+          setWatchedMovies(movies);
 
-    // 2. Simular "Recomendados" (Usamos Popular)
-    fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&page=2`)
-      .then(r => r.json())
-      .then(data => setRecommendedMovies(data.results.slice(0, 4)));
+          // 2. Processar Recomendados (recommended_movies_ids)
+          if (data.recommended_movies_ids && Array.isArray(data.recommended_movies_ids)) {
+            const recPromises = data.recommended_movies_ids.map(async (id) => {
+              const tmdbRes = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}`);
+              return tmdbRes.json();
+            });
+            const recMovies = await Promise.all(recPromises);
+            setRecommendedMovies(recMovies);
+          }
+        })
+        .catch(err => console.error("Erro ao carregar filmes vistos:", err));
+    }
 
   }, [navigate, authUser]);
 

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useMovies } from "../hooks/useMovies";
 import "../App.css";
 
@@ -47,20 +48,22 @@ export default function CatalogAI() {
 
       <div className="catalog-grid">
         {movies.map((m) => (
-          <article key={m.id} className="movie-card">
-            {m.poster_path && (
-              <img
-                src={`https://image.tmdb.org/t/p/w500${m.poster_path}`}
-                alt={m.title}
-              />
-            )}
-            <div className="movie-info">
-              <h3 className="movie-title">{m.title}</h3>
-              <p style={{ fontSize: "0.85rem", color: "var(--accent)" }}>
-                ⭐ {m.vote_average?.toFixed?.(1) ?? "N/A"}
-              </p>
-            </div>
-          </article>
+          <Link key={m.id} to={`/movie/${m.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+            <article className="movie-card">
+              {m.poster_path && (
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${m.poster_path}`}
+                  alt={m.title}
+                />
+              )}
+              <div className="movie-info">
+                <h3 className="movie-title">{m.title}</h3>
+                <p style={{ fontSize: "0.85rem", color: "var(--accent)" }}>
+                  ⭐ {m.vote_average?.toFixed?.(1) ?? "N/A"}
+                </p>
+              </div>
+            </article>
+          </Link>
         ))}
       </div>
     </div>
