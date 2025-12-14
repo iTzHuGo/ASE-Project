@@ -5,7 +5,8 @@ import {
     userBoard,
     adminBoard,
 } from "../controllers/checkUser.controller.js";
-import { authJwt } from "../middleware/index.js";
+import { rateMovie } from "../controllers/user.controller.js";
+import { authJwt } from "../middlewares/index.js";
  
 const router = express.Router();
  
@@ -17,5 +18,8 @@ router.get("/user", [authJwt.verifyToken], userBoard);
 
 // Admin Route
 router.get("/admin", [authJwt.verifyToken, authJwt.isAdmin], adminBoard);
+
+// Rate Movie Route
+router.post("/rate", [authJwt.verifyToken], rateMovie);
  
 export default router;

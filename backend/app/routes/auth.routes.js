@@ -4,7 +4,7 @@ import express from "express";
 
 import * as controller from "../controllers/auth.controller.js";
 
-import { verifySignUp } from "../middlewares/index.js";
+import { verifySignUp} from "../middlewares/index.js";
 
 const router = express.Router();
  
@@ -18,4 +18,6 @@ router.post(
 // Signin Route
 router.post("/signin", controller.signin);
  
+
+
 export default router;

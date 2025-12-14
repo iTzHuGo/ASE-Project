@@ -7,6 +7,7 @@ import cors from 'cors';
 
 import authRoutes from "./routes/auth.routes.js";
 import recommendationRoutes from './routes/recommendation.routes.js';
+import userRoutes from './routes/user.routes.js';
 
 
 
@@ -34,6 +35,7 @@ app.get('/api/health',  async (req, res) => {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/recommendation', recommendationRoutes);
+app.use('/api/user', userRoutes);
 
 
 
