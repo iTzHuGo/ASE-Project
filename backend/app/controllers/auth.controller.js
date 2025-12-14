@@ -86,12 +86,12 @@ export const signin = async (req, res) => {
 
         res.status(200).json({
             message: 'Authenticated successfully.',
-            user_details: {
+            token: jwtToken,
+            user: {
                 id: user.id,
                 username: user.username,
                 email: user.email,
-                roles: [authority],
-                accessToken: jwtToken
+                roles: [authority]
             }
         });
     } catch (error) {
