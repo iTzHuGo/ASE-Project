@@ -26,7 +26,7 @@ export const signup = async (req, res) => {
 
         const data = [username, email, secretPassword, role];
 
-        const results = await db.query(query, data);
+        const results = await _query(query, data);
 
         return res.status(201).json({
         message: 'User registered successfully.',
@@ -66,7 +66,7 @@ export const signin = async (req, res) => {
         `SELECT * FROM users 
         WHERE email = $1`;
 
-        const results = await db.query(query, [email]);
+        const results = await _query(query, [email]);
 
         if (results.rows.length === 0) {
             return res.status(404).json({ message: "User not found." });
@@ -74,13 +74,13 @@ export const signin = async (req, res) => {
 
         const user = results.rows[0];
 
-        const passwordIsValid = bcrypt.compareSync(pass, user.password);
+        const passwordIsValid = compareSync(pass, user.password);
 
         if (!passwordIsValid) {
             return res.status(401).json({ accessToken: null, message: "Invalid Email or Password." });
         }
 
-        const jwtToken = jwt.sign({ id: user.id }, authConfig.secret, { expiresIn: 86400 });
+        const jwtToken = sign({ id: user.id }, secret, { expiresIn: 86400 });
 
         const authority = "ROLE_" + user.role.toUpperCase();
 

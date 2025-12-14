@@ -18,7 +18,7 @@ const verifyToken = (req, res, next) => {
         token = token.slice(7, token.length).trimLeft();
     }
 
-    jwt.verify(token, config.secret, (err, decoded) => {
+    verify(token, secret, (err, decoded) => {
         if (err) {
             return res.status(401).send({ message: "Unauthorized!" });
         }
@@ -31,7 +31,7 @@ const verifyToken = (req, res, next) => {
 const isAdmin = async (req, res, next) => {
   try {
     const query = "SELECT role FROM users WHERE id = $1";
-    const result = await db.query(query, [req.userId]);
+    const result = await _query(query, [req.userId]);
 
     if (result.rows.length === 0) {
       return res.status(404).send({ message: "User not found." });
