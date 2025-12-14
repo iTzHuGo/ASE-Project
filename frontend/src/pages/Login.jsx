@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../App.css"; 
+import { useAuth } from "../hooks/AuthContext";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [form, setForm] = useState({
     email: "",
@@ -47,7 +49,7 @@ export default function Login() {
       
       // Guardar token e dados do utilizador reais
       if (data.token) localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user || { email: form.email }));
+      login(data.user || { email: form.email });
       
       navigate("/catalog");
     } catch (err) {
