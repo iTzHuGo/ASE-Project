@@ -1,43 +1,27 @@
 // app/controllers/recommendation.controller.js
 
 import db from "../config/db.config.js";
+import axios from "axios";
 
-exports.recommendBasedOnMovie = async (req, res) => {
-    const title = req.body.title;
-    const topN = req.body.topN || 5;
-    
-    try {
-        
-            // enviar request ao api do flask
-        const response = await fetch('http://localhost:5000/recommend/movie/<title>', {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title, topN })
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch recommendations from Flask service');
-        }
-
-        const recommendations = await response.json();
-
-        return res.status(200).json({
-            message: 'Recommendations fetched successfully.',
-            recommendations: recommendations
-        });
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Error fetching recommendations!", error: err.message });
-    }
-}
+const FLASK_SERVICE_URL = process.env.FLASK_SERVICE_URL || "http://localhost:8000";
 
 export const getRatedMoviesByUser = async (req, res) => {
-    const userId = req.params.userId;
+  /// Exemplo de formato de resposta
+    /*
+    {
+  "user_id": 1,
+  "ratings": [
+    { "tmdb_id": 27205, "rating": 5 }
+  ],
+  "count": 1
+}
+    */
 
-    if (!userId) {
-        return res.status(400).json({ message: "User ID is required in the path." });
-    }
+    const userId = Number(req.params.userId);
+    
+    if (!Number.isInteger(userId)) {
+    return res.status(400).json({ message: "User ID must be an integer." });
+  }
 
     try {
 
@@ -82,56 +66,81 @@ export const getRatedMoviesByUser = async (req, res) => {
 }
         
 
-export const recommendForUser = async (req, res) => {
-    const userId = req.body.userId;
-    const topN = req.body.topN || 5;
+export const getRecommendationsForUser = async (req, res) => {
+  const userId = Number(req.params.userId);
+  
+  if (!Number.isInteger(userId)) {
+    return res.status(400).json({ message: "User ID must be an integer." });
+  }
 
-    try {
+  try {
+    const flaskEndpoint = `${FLASK_SERVICE_URL}/recommend/user`;
+
+    const response = await axios.get(flaskEndpoint, {
+      params: {
+        user_id : userId
+      }
+    });
+
+    res.status(200).json({
+      user_id: userId,
+      results: response.data
+    });
+
+  } catch (error){
+    console.error("Error calling Flask GET Endpoit:", error.message);
+
+    if (error.response) {
+        // Flask returned an HTTP error (e.g., 404, 400, 500)
+        const { status, data } = error.response;
         
-            // enviar request ao api do flask
-        const response = await fetch('https://localhost:5000/recommend/user/<userId>', {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId, topN })
+        return res.status(status).json({
+            error: "Flask service returned an error.",
+            details: data,
+            flask_status: status
         });
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch recommendations from Flask service');
-        }
-
-        const recommendations = await response.json();
-
-        return res.status(200).json({
-            message: 'User recommendations fetched successfully.',
-            recommendations: recommendations
-        });
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Error fetching user recommendations!", error: err.message });
     }
 
-}
-    const getTmdbMovieGenres = async (tmdbMovieId) => {
+    res.status(503).json({error: "Could not reach Flask service."})
+  }
+};
 
-        const url = `${TMDB_API_URL}/movie/${tmdbMovieId}?api_key=${TMDB_API_KEY}`;
 
-        try {
-            const response  = await fetch(url);
+export const getRecommendationsForMovie = async (req, res) => {
+  const movieTitle = req.query.title;
+  
+  if (!movieTitle) {
+    return res.status(400).json({ message: "Movie title must be provided." });
+  }
 
-            if (!response.ok) {
-                console.error("TMDB Error for ID ${tmdbMovieId}:", response.statusText);
-                return [];
-            }
+  try {
+    const flaskEndpoint = `${FLASK_SERVICE_URL}/recommend/movie`;
 
-            const data = await response.json();
-            return data.genres.map(genre => genre.name);
-        } catch (e) {
-            console.error(`Network or Parsing Error fetching ${tmdbMovieId}:`, e);
-            return [];
-        }
+    const response = await axios.get(flaskEndpoint, {
+      params: {
+        movie_title : movieTitle
+      }
+    });
+
+    res.status(200).json({
+      movie_title: movieTitle,
+      results: response.data
+    });
+
+  } catch (error){
+    console.error("Error calling Flask GET Endpoit:", error.message);
+
+    if (error.response) {
+        // Flask returned an HTTP error (e.g., 404, 400, 500)
+        const { status, data } = error.response;
+        
+        return res.status(status).json({
+            error: "Flask service returned an error.",
+            details: data,
+            flask_status: status
+        });
     }
-    
 
-    export {recommendBasedOnMovie};
-    export {getRatedMoviesByUser};
+    res.status(503).json({error: "Could not reach Flask service."})
+  }
+};
