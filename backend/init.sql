@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS users (
 -- 2. Movies Table (Cache/Reference for TMDB)
 CREATE TABLE IF NOT EXISTS movies (
     id SERIAL PRIMARY KEY,
+    tmdb_id INT UNIQUE NOT NULL, -- Crucial: Link to external API
     title TEXT NOT NULL,
     release_date DATE,
     duration_min INT,
