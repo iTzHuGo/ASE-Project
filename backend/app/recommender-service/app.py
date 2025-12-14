@@ -32,14 +32,17 @@ def recommend_based_movie():
         "recommended_movies_ids" : recommended_ids
     })
 
-@app.route('/recommend/user/<int:user_id>', methods=['GET'])
+@app.route('/recommend/user/<int:user_id>', methods=['POST'])
 def recommend_based_user(user_id):
     """Recommend movies based on a user's ratings fetched from Express."""
 
+    data = request.json
+    if not data or 'ratings' not in data:
+        return jsonify({"error": "Missing 'ratings' array in request body. Express did not send the data."}), 400
+   
+    user_ratings = data['ratings']
     top_n = request.args.get('top_n', default=5, type=int)
 
-    user_ratings = recommender.get_user_movie_ratings_from_express(user_id)
-   
     if not user_ratings:
         return jsonify({
             "error": f"User {user_id} has no ratings or was not found"
@@ -50,6 +53,7 @@ def recommend_based_user(user_id):
     return jsonify({
         "user_id": user_id,
         "top_n_requested" : top_n,
+        "ratings" : user_ratings,
         "recommended_movies_ids" : recommended_ids
     })
 
@@ -67,8 +71,8 @@ if __name__ == '__main__':
 
     print("\n=== Recommender Service Started ===")
     print("Available endpoints:")
-    print("  GET /recommend/movie/<movie_title>?top_n=5")
-    print("  GET /recommend/user/<user_id>?top_n=5")
+    print("  GET /recommend/movie")
+    print("  POST /recommend/user/<user_id>")
     print("  GET /health")
     print("=" * 40 + "\n")
 
