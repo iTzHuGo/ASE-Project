@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS genre (
     name VARCHAR(512) NOT NULL
 );
 
--- Table: movie
-CREATE TABLE IF NOT EXISTS movie (
+-- Table: movies
+CREATE TABLE IF NOT EXISTS movies (
     id BIGSERIAL PRIMARY KEY,
     tmdb_id BIGINT NOT NULL UNIQUE,
     title VARCHAR(512) NOT NULL,
@@ -26,8 +26,8 @@ CREATE TABLE IF NOT EXISTS movie (
     genre_ids INT[] -- Cache array for frontend performance
 );
 
--- Table: rating
-CREATE TABLE IF NOT EXISTS rating (
+-- Table: ratings
+CREATE TABLE IF NOT EXISTS ratings (
     id BIGSERIAL PRIMARY KEY,
     rating_value BIGINT NOT NULL CHECK (rating_value BETWEEN 1 AND 5),
     comment VARCHAR(512),
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS rating (
     movie_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
     
-    FOREIGN KEY (movie_id) REFERENCES movie(id) ON DELETE CASCADE,
+    FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     UNIQUE (user_id, movie_id)
 );
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS movie_genre (
     genre_id BIGINT,
     
     PRIMARY KEY (movie_id, genre_id),
-    FOREIGN KEY (movie_id) REFERENCES movie(id) ON DELETE CASCADE,
+    FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE,
     FOREIGN KEY (genre_id) REFERENCES genre(id) ON DELETE CASCADE
 );
 
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS list_movie (
     
     PRIMARY KEY (list_id, movie_id),
     FOREIGN KEY (list_id) REFERENCES list(id) ON DELETE CASCADE,
-    FOREIGN KEY (movie_id) REFERENCES movie(id) ON DELETE CASCADE
+    FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE
 );
 
 -- 6. Genres_names Table
@@ -115,7 +115,7 @@ INSERT INTO genre (id, name) VALUES
 ON CONFLICT (id) DO NOTHING;
 
 -- B. Insert Movies
-INSERT INTO movie (tmdb_id, title, release_date, duration_min, synopsis, genre_ids) VALUES 
+INSERT INTO movies (tmdb_id, title, release_date, duration_min, synopsis, genre_ids) VALUES 
 (27205, 'Inception', '2010-07-16', 148, 'A thief who steals corporate secrets...', '{878, 28, 12}'),
 (603, 'The Matrix', '1999-03-31', 136, 'A computer hacker learns from mysterious rebels...', '{28, 878}'),
 (238, 'The Godfather', '1972-03-14', 175, 'Spanning the years 1945 to 1955...', '{80, 18}');
@@ -135,8 +135,8 @@ INSERT INTO movie_genre (movie_id, genre_id) VALUES (2, 28), (2, 878);
 INSERT INTO movie_genre (movie_id, genre_id) VALUES (3, 80), (3, 18);
 
 -- E. Insert Ratings
-INSERT INTO rating (user_id, movie_id, rating_value, comment) VALUES
-(1, 1, 5, 'Mind-blowing movie!');
+INSERT INTO ratings (user_id, movie_id, rating_value, comment) VALUES
+(1, 1, 5, 'Mind-blowing movies!');
 
 -- F. Insert into List_Movies
 INSERT INTO list_movie (list_id, movie_id) VALUES (1, 1);

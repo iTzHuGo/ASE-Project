@@ -22,12 +22,12 @@
   box-sizing: border-box;
 }
 
-html body {
+body {
   background-color: var(--bg-color);
   color: #fff; /* TEXTO BRANCO EM TODO O SITE */
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
-} 
+}
 
 /* =========================
    ANIMAÇÕES & ORBES
@@ -411,4 +411,32 @@ html body {
   
   /* Esconde um orbe em ecrãs pequenos para não poluir */
   .orb-purple { display: none; }
+}
+
+/* =========================
+   TOAST NOTIFICATION (POP-UP)
+   ========================= */
+.toast-notification {
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--accent);
+  color: #fff;
+  padding: 12px 28px;
+  border-radius: 50px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: slideDownToast 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+}
+
+@keyframes slideDownToast {
+  from { transform: translate(-50%, -100px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
 }

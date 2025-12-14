@@ -18,6 +18,7 @@ export function useMovies({
 } = {}) {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [totalPages, setTotalPages] = useState(0);
   const [error, setError] = useState(null);
 
   const fetchMovies = useCallback(() => {
@@ -60,6 +61,7 @@ export function useMovies({
       .then((data) => {
         // TMDB devolve resultados em data.results
         setMovies(Array.isArray(data.results) ? data.results : []);
+        setTotalPages(data.total_pages || 0);
       })
       .catch((err) => {
         if (err.name === "AbortError") return; // ignorar aborts
@@ -88,6 +90,7 @@ export function useMovies({
   return {
     movies,
     isLoading,
+    totalPages,
     error,
     reload,
   };

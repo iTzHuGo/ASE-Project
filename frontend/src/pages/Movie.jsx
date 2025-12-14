@@ -15,6 +15,7 @@ export default function Movie() {
 
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API_KEY}&include_adult=false`)
@@ -62,7 +63,8 @@ export default function Movie() {
 
       if (response.ok) {
         setRating(value);
-        alert("Obrigado pela tua avaliação!");
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000); // Esconde após 3 segundos
       }
     } catch (error) {
       console.error("Erro ao enviar rating:", error);
@@ -73,6 +75,14 @@ export default function Movie() {
 
 return (
     <div className="page-container">
+      {/* Toast Notification */}
+      {showToast && (
+        <div className="toast-notification">
+          <span style={{ fontSize: "1.2rem" }}>✨</span>
+          Rating guardado com sucesso!
+        </div>
+      )}
+
       {/* Botão de Voltar */}
       <button 
         onClick={() => navigate(-1)} 

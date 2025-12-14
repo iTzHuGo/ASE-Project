@@ -145,7 +145,10 @@ def user_based_recommendation(userID, userMoviesReviews, top_n=5):
     genre_weighted_scores = {}
 
     for movie in userMoviesReviews:
-        rating = movie.get('rating', 0)
+        try:
+            rating = float(movie.get('rating', 0))
+        except (ValueError, TypeError):
+            rating = 0
         genres = movie.get('genre_ids', [])
 
         for genre_id in genres:

@@ -78,7 +78,7 @@ export default function Profile() {
       <header className="profile-header">
         <div className="profile-welcome">
           <h1>Olá, {firstName}! 👋</h1>
-          <p>Membro desde 2024 • {watchedMovies.length} filmes vistos este mês</p>
+          <p>Membro desde o inicio, Obrigado pela confiança! • {watchedMovies.length} filmes vistos </p>
         </div>
         <div style={{ display: "flex", gap: "1rem" }}>
           <button onClick={() => setIsEditing(true)} className="landing-btn-ghost">
